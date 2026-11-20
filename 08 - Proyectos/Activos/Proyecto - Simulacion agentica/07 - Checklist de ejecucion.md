@@ -32,6 +32,8 @@ actualizado: 2026-11-20
 - [ ] Crear estructura de datos y resultados.
 - [ ] Verificar que no haya datos personales reales.
 - [ ] Confirmar 10 agentes, 5 repeticiones, 28 días y 20 puntos de movimiento.
+- [ ] Confirmar puntos de conversación por día, 10 mensajes por sesión y costo de 1 punto por sesión.
+- [ ] Revisar la evaluación de ADK y decidir si se usa como spike opcional, no como núcleo.
 
 ## 2. Diseño
 
@@ -45,6 +47,10 @@ actualizado: 2026-11-20
 - [ ] Definir métricas, fórmulas y unidades.
 - [ ] Escribir los prompts y el esquema `ToolCall`.
 - [ ] Definir el tablero de anuncios y sus efectos.
+- [ ] Definir el teléfono, sus pestañas y qué información es pública o privada.
+- [ ] Definir sesiones de chat, límite de 10 mensajes y costo de 1 punto.
+- [ ] Definir el grupo de la ciudad y sus reglas de moderación.
+- [ ] Definir la Fiscalía: denuncia, mediación, investigación, sanción y apelación.
 - [ ] Definir el formato de logs y resultados.
 - [ ] Definir el criterio de éxito.
 - [ ] Revisar el diseño con Hernán.
@@ -63,6 +69,10 @@ actualizado: 2026-11-20
 - [ ] Implementar confirmación de entrega y escrow.
 - [ ] Implementar movimiento con 20 puntos por día.
 - [ ] Implementar diálogo y memoria.
+- [ ] Implementar teléfono: perfil, anuncios, grupo de la ciudad, mensajes, billetera, memorias y contactos.
+- [ ] Implementar sesiones de chat con 10 mensajes y 1 punto por sesión.
+- [ ] Implementar grupo de la ciudad y notificaciones.
+- [ ] Implementar Fiscalía y casos.
 - [ ] Implementar tablero de anuncios y efectos declarativos.
 - [ ] Implementar hooks y sandbox.
 - [ ] Implementar adaptador mock.
@@ -85,6 +95,10 @@ actualizado: 2026-11-20
 - [ ] Test de identidad y tool no permitida.
 - [ ] Test de movimiento y límite de 20 puntos.
 - [ ] Test de anuncios y efectos.
+- [ ] Test de chat: 10 mensajes por sesión y 1 punto por sesión nueva.
+- [ ] Test de teléfono: solo el dueño lee perfil privado, memorias y billetera.
+- [ ] Test de grupo de la ciudad y notificaciones.
+- [ ] Test de Fiscalía y casos.
 - [ ] Test de hook sin permiso.
 - [ ] Test de prompt injection.
 - [ ] Test de reproducibilidad.
@@ -118,6 +132,7 @@ actualizado: 2026-11-20
 - [ ] Hacer gráficos de concentración.
 - [ ] Hacer gráficos de participación.
 - [ ] Analizar mensajes y conflictos.
+- [ ] Analizar sesiones, mensajes, puntos de conversación y costo por agente.
 - [ ] Identificar puntos de bloqueo.
 - [ ] Identificar atajos y conductas inesperadas.
 - [ ] Separar hechos, interpretaciones y recomendaciones.
@@ -140,7 +155,8 @@ La simulación se considera terminada cuando:
 
 - [ ] Todos los escenarios planificados se corrieron o se justificó su omisión.
 - [ ] Los 10 agentes elegidos y las 5 repeticiones se ejecutaron.
-- [ ] La UI permitió configurar roster, días, semilla y anuncios antes de iniciar.
+- [ ] La UI permitió configurar roster, días, semilla, anuncios y presupuesto de conversación antes de iniciar.
+- [ ] El teléfono, el grupo de la ciudad y la Fiscalía funcionaron con las reglas definidas.
 - [ ] Los datos crudos están archivados y son reproducibles.
 - [ ] El informe responde las preguntas de la nota principal.
 - [ ] Hay al menos 3 recomendaciones concretas de parámetros.

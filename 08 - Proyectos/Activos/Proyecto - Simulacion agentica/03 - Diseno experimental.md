@@ -63,6 +63,7 @@ actualizado: 2026-11-20
 | Confirmación de entrega | Con código, sin código | Independiente |
 | Duración | 28, 56 días | Control |
 | Repeticiones | 5 por escenario | Control |
+| Puntos de conversación | 1, 2, 3 por día | Independiente |
 
 ## 5. Métricas
 
@@ -81,13 +82,17 @@ actualizado: 2026-11-20
 | Categorías activas | Categorías con al menos una oferta | # |
 | Conflictos | Disputas registradas | # |
 | Sanciones | Sanciones aplicadas por tipo | # |
+| Sesiones de chat | Sesiones abiertas por agente y día | # |
+| Mensajes | Mensajes enviados por agente, canal y día | # |
+| Uso de puntos de conversación | Puntos consumidos / disponibles | % |
+| Casos de Fiscalía | Casos abiertos, mediados y resueltos | # |
 | Satisfacción | Promedio de percepción declarada | 1–5 |
-| Costo | Gasto estimado en modelos | USD |
+| Costo | Gasto estimado en modelos, separando turnos y chat | USD |
 
 ## 6. Diseño de la corrida
 
 - **Horizonte:** 28 días por ciclo; 56 días para observar un segundo ciclo.
-- **Turnos:** 1 turno = 1 día. Cada agente actúa una vez por turno, con hasta 5 tool calls y 20 puntos de movimiento.
+- **Turnos:** 1 turno = 1 día. Cada agente actúa una vez por turno, con hasta 5 tool calls, 20 puntos de movimiento y 2 puntos de conversación (1 en la primera corrida).
 - **Repeticiones:** 5 por escenario, con semillas fijas y registradas.
 - **Semillas:** no se cambian entre repeticiones del mismo escenario; se usan para medir variabilidad.
 - **Modelo:** primero mock deterministico; luego LLM con temperatura 0,5 para reducir varianza.

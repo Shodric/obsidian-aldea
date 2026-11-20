@@ -70,6 +70,25 @@ costo_corrida =
 
 Con prompts más largos, memoria y reintentos, el costo puede multiplicarse. Por eso el límite duro es obligatorio. El simulador debe registrar tokens y costo por turno, agente y corrida.
 
+### 4.1 Costo de conversación
+
+El chat se cobra en **puntos de conversación**, no en créditos ni en movimiento. La configuración inicial recomendada es:
+
+- `conversationPointsPerDay = 2` (configurable; para la primera corrida se puede usar 1).
+- `messagesPerChatSession = 10` por agente.
+- `chatSessionCost = 1` punto por sesión nueva.
+- Solo `talk` con sesión nueva consume un punto. Continuar una sesión abierta no cuesta otro punto.
+- Comprar, vender, trabajar, descansar y leer el teléfono no consumen puntos.
+
+**Techo de volumen:** 10 agentes × 28 días × 5 repeticiones × 2 sesiones = **2.800 sesiones**; con 10 mensajes por sesión, hasta **28.000 mensajes**. Si cada mensaje se convierte en una llamada al modelo, el costo puede superar el de los turnos normales. Por eso:
+
+- La primera corrida debe usar 1 punto de conversación por día.
+- El modo mock debe simular chats sin LLM.
+- El límite duro se calcula incluyendo los chats.
+- El informe debe mostrar sesiones, mensajes y tokens por agente.
+
+**Ejemplo conservador:** 1.400 turnos + 2.800 sesiones de chat, 1.500 tokens de entrada y 200 de salida por llamada. A precios de referencia, el chat puede costar varias veces más que los turnos. El presupuesto C (USD 10–30) sigue siendo el techo, pero solo se libera después de medir una corrida chica.
+
 ## 5. Escenarios de presupuesto
 
 | Escenario | Qué incluye | Rango | Cuándo |
@@ -79,7 +98,7 @@ Con prompts más largos, memoria y reintentos, el costo puede multiplicarse. Por
 | C — Recomendado | Mock + DeepSeek o similar | USD 10–30 | Corrida principal E1-E8 |
 | D — Extendido | Modelos premium y más repeticiones | USD 30–100 | Solo si C deja preguntas abiertas |
 
-**Recomendación:** empezar por A, pasar a B y liberar C solo con el diseño cerrado. D no se justifica en la primera etapa.
+**Recomendación:** empezar por A, pasar a B y liberar C solo con el diseño cerrado. D no se justifica en la primera etapa. El escenario C incluye los chats, pero la primera corrida debe usar 1 punto de conversación por día para medir el costo real antes de subir a 2.
 
 ## 6. Estimación de esfuerzo
 
@@ -92,7 +111,7 @@ Con prompts más largos, memoria y reintentos, el costo puede multiplicarse. Por
 | Corrida | 1–3 días | Rodrigo |
 | Análisis | 2–3 días | Rodrigo |
 
-**Total preliminar:** 8–16 días de trabajo efectivo. No incluye espera de insumos ni revisión externa.
+**Total preliminar:** 10–20 días de trabajo efectivo. Incluye teléfono, chats y Fiscalía; no incluye espera de insumos ni revisión externa.
 
 ## 7. Insumos que deben estar disponibles
 

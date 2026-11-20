@@ -47,6 +47,9 @@ Convertir la simulación en un proceso reproducible, barato y útil para decidir
 - Definir las métricas, fórmulas y unidades.
 - Escribir los prompts y el esquema `ToolCall`.
 - Definir el mundo de hexágonos, el movimiento y el tablero de anuncios.
+- Definir el teléfono, el grupo de la ciudad y las sesiones de chat de 10 mensajes con 1 punto por sesión.
+- Definir la Fiscalía y el flujo de casos.
+- Revisar la evaluación de ADK y decidir si se hace un spike aislado.
 - Definir el formato de los datos de salida.
 
 **Entregable:** [[03 - Diseno experimental|Diseño experimental]] y [[05 - Prompts y perfiles|Prompts y perfiles]] completos.
@@ -61,6 +64,8 @@ Convertir la simulación en un proceso reproducible, barato y útil para decidir
 - Implementar el registro de agentes, ofertas, créditos y transacciones.
 - Implementar el motor de reglas: emisión, transferencia, vencimiento, movimiento y sanción.
 - Implementar el `ActionGateway`, el toolbelt y el tablero de anuncios.
+- Implementar el teléfono, las sesiones de chat, el grupo de la ciudad y las notificaciones.
+- Implementar la Fiscalía y el registro de casos.
 - Implementar el adaptador de modelo (mock, gratuito o pago).
 - Implementar el registro de eventos y el cálculo de métricas.
 - Implementar el generador de informe y gráficos.
@@ -152,12 +157,12 @@ Estimación preliminar, sin fecha comprometida:
 |---|---|---|
 | F0.1 Preparación | 0,5–1 día | Depende de los archivos de Hernán |
 | F0.2 Diseño | 1–2 días | Se puede hacer sin código |
-| F0.3 Construcción | 3–5 días | Más si se agrega LLM desde el inicio |
+| F0.3 Construcción | 5–7 días | Incluye teléfono, chats, Fiscalía y LLM desde el inicio |
 | F0.4 Prueba | 1–2 días | Incluye ajustes |
 | F0.5 Corrida | 1–3 días | Depende de la velocidad del modelo |
 | F0.6 Análisis | 2–3 días | Incluye informe y gráficos |
 
-**Total preliminar:** 8–16 días de trabajo efectivo, distribuidos en el calendario que se acuerde.
+**Total preliminar:** 10–20 días de trabajo efectivo, distribuidos en el calendario que se acuerde. La diferencia con la estimación anterior viene del teléfono, las sesiones de chat y la Fiscalía.
 
 ## Entregables
 

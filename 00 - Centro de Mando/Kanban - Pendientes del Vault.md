@@ -29,6 +29,8 @@ Estado de construcción del vault y del proyecto. Mover los ítems a medida que 
 - [ ] Definir el roster definitivo de 10 agentes: nombre, edad, oficio, historia, personalidad y recursos iniciales.
 - [ ] Completar `LLM_API_KEY` en `.env` y validar el endpoint de DeepSeek V4.1 Flash.
 - [ ] Cerrar parámetros económicos: sueldo/plan social, precios, supermercado en etapa 1 y 2, y duración del día simulado.
+- [ ] Validar con Hernán los puntos de conversación por día, el límite de 10 mensajes por sesión y el proceso de Fiscalía.
+- [ ] Definir qué información del teléfono es pública y cuál queda solo para el dueño.
 - [ ] Definir el territorio del piloto y los contactos locales.
 - [ ] Definir el alcance funcional del MVP y sus no-alcances.
 - [ ] Diseñar el piloto de 4 semanas y su marco de evaluación.
@@ -79,6 +81,9 @@ Estado de construcción del vault y del proyecto. Mover los ítems a medida que 
 - [x] Segundo commit con los documentos de Hernán y las copias de trabajo.
 - [x] Arquitectura técnica y configuración de la simulación definidas: TypeScript, SQLite + JSONL, 10 agentes, 5 repeticiones, 20 movimientos por ronda, anuncios y hooks.
 - [x] Tercer commit con la arquitectura y el `.env.example` de la simulación.
+- [x] Teléfono, grupo de la ciudad, sesiones de chat de 10 mensajes y Fiscalía documentados en la arquitectura y los requisitos.
+- [x] Evaluación de ADK documentada: no como núcleo; spike opcional.
+- [x] Cuarto commit con teléfono, chats, Fiscalía y evaluación de ADK.
 
 ## Enlaces
 

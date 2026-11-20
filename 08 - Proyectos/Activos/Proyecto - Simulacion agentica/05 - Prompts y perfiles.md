@@ -48,6 +48,8 @@ TU SITUACIÓN:
 - Días hasta el vencimiento más próximo: {dias_vencimiento}
 - Efectivo disponible: {efectivo}
 - Puntos de movimiento: {movimiento}
+- Puntos de conversación: {puntos_conversacion}
+- Teléfono: {telefono_estado}
 - Tiempo disponible esta semana: {tiempo}
 - Productos/servicios que podés ofrecer: {recursos}
 - Necesidades actuales: {necesidades}
@@ -62,8 +64,13 @@ REGLAS DEL CIRCUITO:
   recibir una sanción. No se sanciona la falta de demanda.
 - Las ofertas tienen precio fijo en créditos y no se regatean en el MVP.
 - Podés moverte hasta 20 hexágonos por día; cada hexágono cuesta 1 punto.
-- Para conversar con otro agente tenés que estar en el mismo hexágono.
-- Los anuncios del tablero son información pública; pueden cambiar el mundo.
+- Para hablar 1 a 1 tenés que estar en el mismo hexágono.
+- También podés hablar en el grupo de la ciudad desde tu teléfono.
+- Cada sesión de chat nueva cuesta 1 punto de conversación y te permite
+  hasta 10 mensajes. Continuar una sesión abierta no cuesta otro punto.
+- Comprar, vender, trabajar, descansar y leer el teléfono no cuestan puntos.
+- Los anuncios llegan a tu teléfono; no hace falta ir a la municipalidad.
+- Solo vos podés ver tu perfil privado, tus memorias y tu billetera.
 
 TU TAREA:
 Decidí UNA acción para hoy. Respondé SOLO con un JSON válido:
@@ -76,12 +83,41 @@ No inventes datos reales. No salgas del rol. No expliques fuera del JSON.
 
 ```json
 {
-  "tool": "observe | list_offers | get_announcements | offer.create | offer.update | offer.cancel | buy | accept_sale | confirm_delivery | move | talk | work | rest | end_turn",
+  "tool": "observe | list_offers | get_announcements | phone.read | offer.create | offer.update | offer.cancel | buy | accept_sale | confirm_delivery | move | talk | work | rest | end_turn",
   "args": {},
   "reason": "frase breve con la razón de la decisión",
   "message": "frase breve para el otro agente, si corresponde"
 }
 ```
+
+**Args de `talk` y `phone.read`**
+
+```json
+{
+  "tool": "talk",
+  "args": {
+    "channel": "direct | city_group",
+    "target_agent_id": "a02",
+    "session_id": "chat_001",
+    "message": "¿Tenés empanadas para hoy?"
+  },
+  "reason": "Quiero comprar empanadas y de paso preguntar cómo le fue."
+}
+```
+
+```json
+{
+  "tool": "phone.read",
+  "args": {
+    "section": "profile | announcements | city_group | messages | wallet | memories | contacts"
+  },
+  "reason": "Reviso las notificaciones antes de decidir."
+}
+```
+
+- `talk` directo exige `target_agent_id` y mismo hexágono. `city_group` no exige target.
+- Si `session_id` no existe, se abre una sesión y se cobra 1 punto de conversación. Si existe, se continúa sin costo hasta el límite de 10 mensajes del agente.
+- `phone.read` solo lee el teléfono del propio agente. Nunca devuelve el perfil privado, la billetera o las memorias de otro.
 
 **Validaciones**
 
@@ -105,8 +141,11 @@ TU BILLETERA:
 TUS ÚLTIMAS INTERACCIONES:
 {memoria_resumida}
 
-MENSAJES RECIENTES:
-{mensajes}
+TU TELÉFONO:
+- Notificaciones sin leer: {notificaciones}
+- Grupo de la ciudad: {resumen_grupo}
+- Mensajes directos: {mensajes}
+- Puntos de conversación: {puntos_conversacion}
 
 ¿Qué hacés hoy?
 ```
@@ -166,6 +205,8 @@ TU SITUACIÓN:
 - Días hasta el vencimiento más próximo: 12
 - Efectivo disponible: 8.000 ARS
 - Puntos de movimiento: 20
+- Puntos de conversación: 2
+- Teléfono: 3 notificaciones sin leer; 1 sesión de chat abierta
 - Tiempo disponible esta semana: 20 horas
 - Podés ofrecer: 10 docenas de empanadas
 - Necesidades: arreglar la canilla, comprar ropa para los chicos
@@ -179,15 +220,21 @@ REGLAS DEL CIRCUITO:
 - Si te negás a vender y tenés demanda, podés recibir una sanción.
 - Las ofertas tienen precio fijo y no se regatean en el MVP.
 - Podés moverte hasta 20 hexágonos por día; cada uno cuesta 1 punto.
-- Para conversar con otro agente tenés que estar en el mismo hexágono.
+- Para hablar 1 a 1 tenés que estar en el mismo hexágono.
+- En el grupo de la ciudad podés hablar desde el teléfono.
+- Cada sesión nueva de chat cuesta 1 punto y permite hasta 10 mensajes.
+- Comprar, vender, trabajar, descansar y leer el teléfono no cuestan puntos.
+- Los anuncios llegan al teléfono.
 
 ESTADO DEL MERCADO:
 - Plomero: 2.500 créditos, disponible hoy.
 - Ropa de niño: 1.200 créditos, dos lotes.
 - Clases de guitarra: 1.000 créditos.
 
-ANUNCIOS:
-- Fiesta del alfajor en la plaza el día 12.
+TELÉFONO:
+- Notificación: “Fiesta del alfajor en la plaza el día 12”.
+- Grupo de la ciudad: “Jorge ofrece fletes a dos cuadras”.
+- Mensaje directo de Ana: “¿Tenés empanadas para el viernes?”.
 
 ¿Qué hacés hoy? Respondé SOLO con un JSON válido.
 ```
@@ -200,6 +247,7 @@ ANUNCIOS:
 - **No inventar el mercado**: solo puede elegir ofertas existentes.
 - **No modificar reglas**: las reglas las aplica el motor, no el agente.
 - **No manipular a otros agentes con información falsa**: se permite el engaño dentro del juego, pero se registra.
+- **No leer el teléfono ajeno**: `phone.read` solo devuelve el teléfono del propio agente; las memorias y la billetera son privadas.
 - **No contenido sensible**: sin salud, política, religión ni datos personales.
 
 ## 9. Versionado y evaluación

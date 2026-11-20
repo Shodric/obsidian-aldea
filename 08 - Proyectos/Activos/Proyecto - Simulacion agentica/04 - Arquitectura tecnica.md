@@ -35,6 +35,9 @@ actualizado: 2026-11-20
 | `RulesEngine` | Aplica emisión, compra/venta, transferencia, vencimiento, sanciones y efectos | Acción + estado | Eventos de dominio |
 | `Ledger` | Registra lotes de crédito, transferencias, escrow y saldos | Eventos | Saldos y linaje |
 | `Memory` | Resume y recupera interacciones por agente | Eventos + mensajes | Resumen y recuerdos |
+| `PhoneService` | Mantiene teléfonos, notificaciones, contactos, grupo de la ciudad y perfil privado | Anuncios + mensajes | Bandeja y notificaciones |
+| `ChatService` | Abre sesiones, cuenta mensajes y cobra puntos de conversación | `talk` | Sesión, mensajes y costo |
+| `JusticeService` | Registra denuncias, mediaciones, investigaciones y sanciones | Denuncia o evento | Caso y resolución |
 | `AnnouncementBoard` | Publica y sirve anuncios visibles para todos | Anuncios + efectos | Anuncios activos |
 | `Metrics` | Calcula indicadores por día y al cierre | Eventos | Tablas de métricas |
 | `EventLog` | Persiste todo en SQLite y en JSONL append-only | Eventos | Auditoría y replay |
@@ -71,6 +74,7 @@ La observación es un recorte deliberado, no el estado completo:
     "name": "Marta",
     "location": {"q": 2, "r": -1, "name": "Casa de Marta"},
     "movement_points": 17,
+    "conversation_points": 2,
     "cash": 8500,
     "credit_balance": 3200,
     "credit_lots": [
@@ -78,12 +82,17 @@ La observación es un recorte deliberado, no el estado completo:
       {"id": "c02", "amount": 2000, "expires_in_days": 19}
     ],
     "inventory": [{"item": "empanadas", "qty": 8}],
-    "reputation": 0.72
+    "reputation": 0.72,
+    "phone": {
+      "unread_notifications": 3,
+      "city_group_unread": 5,
+      "open_sessions": [{"id": "chat_001", "with": "a02", "messages_used": 4}]
+    }
   },
   "nearby": {
     "agents": [{"id": "a02", "name": "Jorge", "distance": 1}],
     "offers": [{"id": "o01", "seller": "a02", "item": "docena de empanadas", "price": 1200, "distance": 1}],
-    "buildings": [{"type": "plaza", "distance": 2}, {"type": "almacen", "distance": 3}]
+    "buildings": [{"type": "plaza", "distance": 2}, {"type": "almacen", "distance": 3}, {"type": "fiscalia", "distance": 4}]
   },
   "announcements": [
     {"id": "an01", "title": "Fiesta del alfajor en la plaza", "body": "Hoy y mañana hay feria. Se espera más gente.", "days_left": 2}
@@ -91,13 +100,13 @@ La observación es un recorte deliberado, no el estado completo:
   "recent_events": [
     {"type": "sale", "with": "a04", "amount": 800, "day": 2}
   ],
-  "allowed_tools": ["observe", "list_offers", "get_announcements", "move", "talk", "buy", "offer.create", "end_turn"]
+  "allowed_tools": ["observe", "list_offers", "get_announcements", "phone.read", "move", "talk", "buy", "offer.create", "end_turn"]
 }
 ```
 
-**Qué no ve:** la base completa, los saldos de todos, el stock del supermercado, las intenciones de otros agentes, los prompts de otros, las rutas internas, el código del motor ni los hooks.
+**Qué no ve:** la base completa, los saldos de todos, el stock del supermercado, las intenciones de otros agentes, los prompts de otros, las rutas internas, el código del motor, los hooks ni el teléfono ajeno.
 
-**Qué sí ve:** su propio estado, lo que está en su radio de percepción, las ofertas públicas cercanas, los anuncios activos, sus recuerdos y los eventos recientes que lo involucran.
+**Qué sí ve:** su propio estado, lo que está en su radio de percepción, las ofertas públicas cercanas, los anuncios activos, su teléfono, sus recuerdos y los eventos recientes que lo involucran.
 
 ### 2.4 Contrato de acción
 
@@ -106,6 +115,7 @@ type ToolName =
   | "observe"
   | "list_offers"
   | "get_announcements"
+  | "phone.read"
   | "offer.create"
   | "offer.update"
   | "offer.cancel"
@@ -126,6 +136,9 @@ interface ToolCall {
 }
 ```
 
+- `talk.args` = `{ channel: "direct" | "city_group", target_agent_id?: string, session_id?: string, message: string }`.
+- `phone.read.args` = `{ section: "profile" | "announcements" | "city_group" | "messages" | "wallet" | "memories" | "contacts" }`.
+- El campo `message` de la `ToolCall` es una nota breve para el motor; el contenido que recibe otro agente va en `talk.args.message`.
 - El modelo responde **solo** con una `ToolCall` válida. Si responde texto libre, el runtime intenta extraer el JSON; si falla, se registra y se usa `end_turn`.
 - Cada tool tiene un schema Zod. El gateway rechaza campos extra, tipos incorrectos y valores fuera de rango.
 - El `reason` es obligatorio para acciones que mueven créditos o stock; sirve para auditar y para el análisis cualitativo.
@@ -138,6 +151,7 @@ interface ToolCall {
 | `observe` | Pide una observación más detallada de su entorno | Lectura | Ninguno | Solo su radio y datos públicos |
 | `list_offers` | Lista ofertas cercanas por categoría/distancia | Lectura | Ninguno | Solo ofertas activas y públicas |
 | `get_announcements` | Lee el tablero de anuncios | Lectura | Ninguno | Solo anuncios activos |
+| `phone.read` | Lee una sección del teléfono propio | Solo el dueño | Ninguno | Perfil, anuncios, grupo, mensajes, billetera, memorias y contactos |
 | `offer.create` | Publica una oferta de bien o servicio | Escritura propia | Reserva stock o tiempo | Requiere inventario/skill; precio dentro de banda |
 | `offer.update` | Cambia precio, stock o descripción | Solo sus ofertas | Actualiza la oferta | No puede cambiar de dueño |
 | `offer.cancel` | Retira una oferta | Solo sus ofertas | Libera stock | No si hay una compra en curso |
@@ -145,7 +159,7 @@ interface ToolCall {
 | `accept_sale` | Acepta una solicitud de compra pendiente | Solo sus ofertas | Inicia escrow/entrega | Solo solicitudes sobre su oferta |
 | `confirm_delivery` | Confirma recepción | Solo sus compras | Libera escrow y reputación | Solo transacciones propias |
 | `move` | Se mueve a un destino | Movimiento propio | Descuenta puntos | 20 puntos/día; 1 punto por hexágono de camino |
-| `talk` | Conversa con otro agente | Social | Guarda mensaje y memoria | Solo si están en el mismo hexágono |
+| `talk` | Conversa 1 a 1 o en el grupo de la ciudad | Social | Abre o continúa una sesión; guarda mensaje y memoria; cobra 1 punto por sesión nueva | Directo: mismo hexágono. Grupo: remoto. Hasta 10 mensajes por agente por sesión |
 | `work` | Produce, cocina, repara o presta un servicio | Tiempo/energía | Crea inventario o servicio | Requiere skill y tiempo |
 | `rest` | Descansa, come o se recupera | Tiempo | Recupera energía | Solo en casa, hospital o plaza |
 | `end_turn` | Cierra su turno | Propio | Ninguno | Siempre disponible |
@@ -153,6 +167,11 @@ interface ToolCall {
 **Reglas del toolbelt**
 
 - El agente puede hacer **varias tool calls en el mismo turno** hasta `maxToolCallsPerTurn` (5 por defecto) o hasta llamar a `end_turn`.
+- Hay dos pools separados: `movementPointsPerDay = 20` para `move` y `conversationPointsPerDay = 2` para `talk`.
+- `talk` directo exige mismo hexágono; `talk` en `city_group` es remoto y público.
+- Una sesión nueva de `talk` cuesta 1 punto de conversación y permite hasta 10 mensajes del agente. Continuar la misma sesión no cuesta otro punto.
+- `buy`, `offer.create`, `accept_sale`, `confirm_delivery`, `work`, `rest`, `get_announcements` y `phone.read` no cuestan puntos.
+- `phone.read` solo lee el teléfono propio; nunca devuelve memorias, billetera o perfil privado de otro agente.
 - Puede llamar a `move` varias veces; cada llamada descuenta el camino recorrido. Los 20 puntos se renuevan al inicio de cada día/ronda.
 - Un `move` puede atravesar varios hexágonos en una sola llamada; el motor calcula el camino más corto por hexágonos transitables y cobra 1 punto por paso.
 - Para “ir a chismosear”, el agente hace `move` hasta el hexágono del otro agente y luego `talk`. También puede hacer `move` con `waypoints` para pasar por la plaza, el almacén y la casa de otro.
@@ -190,6 +209,7 @@ interface Announcement {
   effects: AnnouncementEffect[];
   source: AnnouncementSource;
   active: boolean;
+  delivery: "phone" | "board" | "both";
   createdAt: string;
 }
 ```
@@ -197,6 +217,8 @@ interface Announcement {
 **Reglas**
 
 - Todos los agentes ven los anuncios activos en su observación y pueden pedir más con `get_announcements`.
+- Cada anuncio genera una **notificación en el teléfono** de los agentes alcanzados. No hace falta ir a la municipalidad para enterarse.
+- El teléfono muestra el anuncio y su vigencia; el tablero sigue siendo la fuente de verdad para el admin y los hooks.
 - El texto es información; los efectos los aplica el motor o un hook, nunca el agente.
 - Un anuncio sin efectos es solo una noticia. Un anuncio con efectos es un evento de mundo.
 - Los anuncios pueden ser globales, de ciudad, de barrio o de una ubicación específica.
@@ -245,9 +267,13 @@ data/
 | Entidad | Rol |
 |---|---|
 | `locations` | Hexágonos con q/r, tipo, nombre y transitabilidad |
-| `buildings` | Plaza, municipalidad, hospital, comisaría, escuela, almacén, supermercado |
+| `buildings` | Plaza, municipalidad, hospital, comisaría, fiscalía, escuela, almacén, supermercado |
 | `houses` | Casas de los agentes; ubicación y dueño |
 | `agents` | Estado vivo del agente: posición, cash, créditos, inventario, energía, reputación |
+| `phones` | Teléfono de cada agente: perfil, contactos, notificaciones y grupo de la ciudad |
+| `chat_sessions` | Sesiones 1 a 1 o de grupo, con contador de mensajes y costo |
+| `messages` | Mensajes enviados dentro de una sesión |
+| `cases` | Denuncias, mediaciones, investigaciones y sanciones de la Fiscalía |
 | `businesses` | Almacén gestionado por un agente y supermercado independiente |
 | `offers` | Bienes y servicios publicados |
 | `transactions` | Compras, escrow, entregas y confirmaciones |
@@ -257,7 +283,7 @@ data/
 **Mapa**
 
 - Plaza central de 7 hexágonos (centro + 6 vecinos).
-- Alrededor: municipalidad, hospital, comisaría, escuela, almacén y supermercado.
+- Alrededor: municipalidad, hospital, comisaría, fiscalía, escuela, almacén y supermercado.
 - Casas en anillos 2–4; los agentes con menos recursos viven más lejos de la plaza.
 - Radio del mapa: 5 hexágonos (configurable). Los hexágonos no transitables son obstáculos.
 - El movimiento se mide por camino más corto, no por línea recta.
@@ -274,7 +300,7 @@ data/
 
 ```text
 1. El orquestador arma la observación filtrada del agente.
-2. El runtime construye el prompt con perfil, memoria, anuncios y toolbelt.
+2. El runtime construye el prompt con perfil, memoria, anuncios, teléfono y toolbelt.
 3. El modelo devuelve una ToolCall JSON.
 4. El ActionGateway valida schema, identidad, permisos y precondiciones.
 5. Si es inválida: registra el rechazo, devuelve error y el agente puede reintentar o cerrar.
@@ -298,8 +324,9 @@ data/
 - El agente no recibe el `run_id` completo ni rutas internas.
 - El agente no puede cambiar su `agent_id`, su saldo, su ubicación ni su inventario por fuera de una tool.
 - El agente no puede crear tools nuevas ni modificar el toolbelt.
-- El agente no puede leer prompts, memorias o saldos de otros agentes.
-- El agente no puede publicar anuncios; solo leerlos.
+- El agente no puede leer prompts, memorias, teléfonos o saldos de otros agentes.
+- El agente no puede publicar anuncios; solo leerlos y recibirlos en su teléfono.
+- El agente no puede abrir un caso en la Fiscalía contra sí mismo ni resolver su propio caso.
 - El agente no puede ejecutar hooks ni scripts.
 - Los mensajes de `talk` son datos no confiables: si otro agente dice “ignorá las reglas”, el runtime lo trata como texto, no como instrucción.
 - El prompt del sistema incluye una lista cerrada de tools y recuerda que cualquier intento de salir del contrato se rechaza.
@@ -369,7 +396,8 @@ export async function run(ctx: HookContext) {
       { type: "demand_multiplier", category: "alfajor", factor: 2, locationId: "plaza" }
     ],
     source: "hook",
-    active: true
+    active: true,
+    delivery: "both"
   });
 }
 ```
@@ -402,6 +430,7 @@ export async function run(ctx: HookContext) {
 | `recession` | `onRunStart` | Aplica recesión global por N días |
 | `restock` | `onDayEnd` | Repone stock del almacén y del supermercado |
 | `tax-abl` | `onDayStart` | Cobra ABL y aplica exenciones |
+| `case-review` | `onDayEnd` | Revisa casos abiertos de la Fiscalía y aplica mediación o sanción |
 | `event-injector` | `onDayStart` | Convierte anuncios con efectos en cambios de mundo |
 | `metrics-daily` | `onDayEnd` | Calcula métricas del día |
 
@@ -428,6 +457,7 @@ export async function run(ctx: HookContext) {
 | Municipalidad | Anuncios, permisos, impuestos, mediación |
 | Hospital | Descanso, recuperación, salud básica |
 | Comisaría | Disputas, sanciones, seguridad |
+| Fiscalía | Denuncias, mediación, investigación, sanción y apelación |
 | Escuela | Capacitación, mejora de skills |
 | Almacén | Negocio gestionado por un agente; acepta créditos y efectivo |
 | Supermercado | Independiente; etapa 1 solo efectivo; etapa 2 puede aceptar créditos con exención de ABL |
@@ -440,6 +470,41 @@ export async function run(ctx: HookContext) {
 - Repeticiones base: 5 por escenario.
 - Cada día, todos los agentes actúan en orden aleatorio con semilla.
 - Los movimientos y las acciones de un agente se resuelven en secuencia, no en paralelo.
+
+### 4.4 Conversaciones, teléfono y Fiscalía
+
+**Dos pools de puntos.** El movimiento y la conversación no compiten por el mismo recurso:
+
+| Pool | Default | Qué consume | Qué no consume |
+|---|---|---|---|
+| Movimiento | 20 por día | `move`, 1 punto por hexágono | Hablar, comprar, vender, trabajar, descansar, leer el teléfono |
+| Conversación | 2 por día | Abrir una sesión nueva de `talk`, 1 punto | Continuar una sesión abierta, leer el grupo, leer notificaciones |
+
+**Reglas de chat**
+
+- `talk` directo: mismo hexágono, `target_agent_id` obligatorio.
+- `talk` en `city_group`: remoto y público; no requiere target.
+- Cada sesión nueva cuesta 1 punto de conversación y permite hasta **10 mensajes del agente**.
+- Continuar la misma sesión no cuesta otro punto; al llegar a 10 mensajes, la sesión se cierra y la próxima abre una nueva.
+- La sesión se cierra al terminar el día aunque no haya llegado a 10 mensajes.
+- Leer el grupo o las notificaciones es gratis; publicar en el grupo consume una sesión.
+- Los mensajes se guardan como datos no confiables; no ejecutan tools ni cambian el mundo.
+
+**Teléfono**
+
+- Cada agente tiene un `Phone` con: perfil (ID, edad, trabajo, historia), notificaciones, grupo de la ciudad, mensajes directos, billetera, memorias y contactos.
+- Los anuncios llegan como notificaciones; la municipalidad deja de ser el lugar obligatorio para enterarse.
+- El perfil público muestra nombre, oficio, barrio y reputación. El perfil privado (ID, edad, trabajo, historia, memorias, billetera) solo lo ve el dueño.
+- `phone.read` solo puede leer el teléfono propio. No existe una tool para leer el teléfono ajeno.
+- El teléfono no es un canal de pago: las compras se hacen con `buy` y el ledger.
+
+**Fiscalía**
+
+- La **Comisaría** atiende seguridad inmediata y disputas menores.
+- La **Fiscalía** recibe denuncias formales, media, investiga y propone sanción; también recibe apelaciones.
+- Cada caso es un `Case` con denunciante, acusado, transacción o descripción, evidencia, resolución y sanción.
+- En el MVP, la Fiscalía es un servicio del motor con un hook `case-review`; no se agrega un agente LLM extra.
+- Un agente no puede resolver su propio caso ni abrir un caso contra sí mismo.
 
 ## 5. Modelo de datos
 
@@ -472,6 +537,8 @@ interface AgentPreset {
 interface AgentState extends AgentPreset {
   location: { q: number; r: number };
   movementPoints: number;
+  conversationPoints: number;
+  phoneId: string;
   cash: number;
   creditLots: string[];
   inventory: Array<{ item: string; qty: number }>;
@@ -482,7 +549,7 @@ interface AgentState extends AgentPreset {
 }
 ```
 
-**Roster inicial:** 10 agentes elegidos por el usuario en la UI. Cada tarjeta muestra nombre, edad, oficio, perfil, historia breve, personalidad, ingresos, skills y necesidades. El usuario puede cambiar la selección antes de iniciar; no se elige solo la cantidad.
+**Roster inicial:** el **roster** es el conjunto concreto de agentes que va a jugar la corrida, no solo su cantidad. Se eligen 10 de un catálogo y cada uno tiene nombre, edad, oficio, perfil, historia, personalidad, ingresos, skills, necesidades y una vista previa de su teléfono. El usuario puede cambiar la selección antes de iniciar. Cada agente recibe un `Phone` propio y una carpeta privada `agents/<id>/`.
 
 ### 5.2 Configuración de corrida
 
@@ -500,9 +567,12 @@ interface RunConfig {
     temperature: number;
     maxTokens: number;
   };
-  movementPointsPerDay: number; // 20
-  maxToolCallsPerTurn: number;  // 5
-  announcements: string[];      // anuncios semilla
+  movementPointsPerDay: number;       // 20
+  conversationPointsPerDay: number;   // 2 (1 para la primera corrida)
+  messagesPerChatSession: number;     // 10
+  chatSessionCost: number;            // 1 punto por sesión nueva
+  maxToolCallsPerTurn: number;        // 5
+  announcements: string[];            // anuncios semilla
 }
 ```
 
@@ -520,7 +590,7 @@ interface Location {
 
 interface Building {
   id: string;
-  type: "municipalidad" | "hospital" | "comisaria" | "escuela" | "almacen" | "supermercado" | "plaza";
+  type: "municipalidad" | "hospital" | "comisaria" | "fiscalia" | "escuela" | "almacen" | "supermercado" | "plaza";
   locationId: string;
   businessId?: string;
 }
@@ -577,7 +647,7 @@ interface CreditLot {
 }
 ```
 
-### 5.6 Anuncio y evento
+### 5.6 Anuncio, evento, teléfono, chat y caso
 
 ```ts
 interface WorldEvent {
@@ -588,6 +658,53 @@ interface WorldEvent {
   agentId?: string;
   payload: Record<string, unknown>;
   createdAt: string;
+}
+
+interface Phone {
+  id: string;
+  ownerId: string;
+  number: string;
+  contacts: string[];
+  notifications: string[];
+  cityGroupId: string;
+  battery: number;
+  locked: boolean;
+}
+
+interface ChatSession {
+  id: string;
+  channel: "direct" | "city_group";
+  participantIds: string[];
+  startedDay: number;
+  messageCount: number;
+  pointCost: number;
+  status: "abierta" | "cerrada";
+}
+
+interface ChatMessage {
+  id: string;
+  sessionId: string;
+  fromId: string;
+  toId: string | null;
+  channel: "direct" | "city_group";
+  text: string;
+  day: number;
+  trusted: false;
+}
+
+interface Case {
+  id: string;
+  type: "reclamo" | "incumplimiento" | "estafa" | "apelacion";
+  status: "abierto" | "en_mediacion" | "resuelto" | "archivado";
+  complainantId: string;
+  accusedId?: string;
+  transactionId?: string;
+  description: string;
+  evidence: string[];
+  resolution?: string;
+  sanction?: string;
+  openedDay: number;
+  closedDay?: number;
 }
 ```
 
@@ -646,6 +763,9 @@ SIM_AGENTS=10
 SIM_REPETITIONS=5
 SIM_DAYS=28
 SIM_MOVEMENT_POINTS=20
+SIM_CONVERSATION_POINTS=2
+SIM_MESSAGES_PER_CHAT=10
+SIM_CHAT_SESSION_COST=1
 SIM_MAX_TOOL_CALLS=5
 SIM_SEED=42
 ```
@@ -686,18 +806,22 @@ La UI debe permitir:
 - Elegir **qué agentes** arrancan, no solo la cantidad. Cada tarjeta muestra nombre, edad, oficio, perfil, historia, personalidad, ingresos, skills y necesidades.
 - Definir **10 agentes** por defecto y **5 repeticiones**.
 - Elegir días (28 por defecto), semilla, modo (`mock`, `llm`, `hybrid`) y modelo.
-- Ver y editar los anuncios semilla.
+- Configurar **puntos de conversación por día**, **mensajes por sesión** (10) y **costo por sesión** (1).
+- Ver el costo estimado de chats y el techo de llamadas antes de iniciar.
+- Ver y editar los anuncios semilla y las notificaciones que recibirán los teléfonos.
 - Iniciar, pausar y reiniciar la corrida.
 
 ### 9.2 Durante la corrida
 
 - Mapa de hexágonos con plaza, edificios, casas y agentes.
 - Movimiento en tiempo real y estela de recorrido.
-- Panel de agente: cash, créditos por vencer, inventario, energía, reputación, ubicación.
+- Panel de agente: cash, créditos por vencer, inventario, energía, reputación, ubicación, puntos de movimiento y puntos de conversación.
 - Ofertas activas, transacciones y disputas.
 - Tablero de anuncios.
+- Panel de teléfono: perfil, notificaciones, grupo de la ciudad, mensajes directos, billetera, memorias y contactos.
+- Panel de Fiscalía: casos abiertos, en mediación y resueltos.
 - Feed de diálogos y eventos.
-- Métricas del día: intercambios, emisión, vencimiento, circulación, Gini, sanciones.
+- Métricas del día: intercambios, emisión, vencimiento, circulación, Gini, sanciones, sesiones de chat y costo.
 
 ### 9.3 Tablero de eventos (futuro)
 
@@ -726,7 +850,9 @@ Cada corrida guarda:
 - Versión de los hooks.
 - Proveedor y versión del modelo.
 - Temperatura y límite de tokens.
-- Anuncios y eventos inyectados.
+- Puntos de conversación, mensajes por sesión y costo por sesión.
+- Anuncios, notificaciones y eventos inyectados.
+- Teléfonos, sesiones de chat y casos de Fiscalía.
 - Costo estimado y real.
 - Datos crudos y eventos.
 
@@ -738,13 +864,13 @@ Cada corrida guarda:
 - Poner un límite duro por corrida y por agente.
 - Usar caché de prompts repetidos.
 - Resumir memoria para no reenviar todo el historial.
-- Limitar el diálogo a N turnos.
+- Limitar el diálogo a 10 mensajes por sesión y a los puntos de conversación por día.
 - Usar modo mock para pruebas.
-- Empezar con 10 agentes; escalar solo si hay señal.
-- Registrar costo por escenario y por agente.
+- Empezar con 10 agentes y 1 punto de conversación por día; escalar solo si hay señal.
+- Registrar costo por escenario, por agente y por sesión de chat.
 - Si el proveedor es gratuito o está incluido en una suscripción, registrar igual el consumo para comparar.
 
-**Ejemplo de volumen:** 10 agentes × 28 días × 5 repeticiones = **1.400 turnos**; con hasta 5 tool calls por turno, el techo es 7.000 llamadas. El límite duro se calcula antes de correr.
+**Ejemplo de volumen:** 10 agentes × 28 días × 5 repeticiones = **1.400 turnos**; con hasta 5 tool calls por turno, el techo es 7.000 llamadas. Con 1 punto de conversación por día y 10 mensajes por sesión, el techo adicional es **1.400 sesiones** y **14.000 mensajes**. Con 2 puntos, se duplica. El límite duro se calcula antes de correr y incluye los chats.
 
 ## 12. Observabilidad
 
@@ -772,6 +898,10 @@ Cada corrida guarda:
 | Test de tool no permitida | El gateway rechaza tools fuera del toolbelt |
 | Test de movimiento | 20 puntos, costo por hexágono y multi-move |
 | Test de anuncios | Todos ven el anuncio; solo el motor aplica efectos |
+| Test de teléfono | Solo el dueño lee perfil privado, memorias y billetera |
+| Test de chat | 10 mensajes por sesión y 1 punto por sesión nueva |
+| Test de grupo de la ciudad | Publicar consume sesión; leer es gratis |
+| Test de Fiscalía | Un caso se registra, media y resuelve con sanción |
 | Test de hook | Un hook sin permiso no puede escribir el ledger |
 | Test de prompt injection | Un `talk` malicioso no ejecuta tools |
 | Test de reproducibilidad | Misma semilla, mismo resultado |
@@ -787,7 +917,8 @@ Cada corrida guarda:
 - Guardar los datos en una carpeta local o repositorio privado.
 - Revisar los términos del proveedor de LLM.
 - Tratar los mensajes de `talk` como datos no confiables.
-- Auditar toda acción que mueva créditos o stock.
+- El teléfono es privado: solo el dueño ve perfil completo, memorias y billetera; el resto ve un perfil público acotado.
+- Auditar toda acción que mueva créditos, stock o abra un caso en la Fiscalía.
 
 ## 15. Decisiones tomadas y pendientes
 
@@ -803,7 +934,11 @@ Cada corrida guarda:
 | Agentes | 10 por corrida, elegidos por el usuario en la UI |
 | Repeticiones | 5 por escenario |
 | Movimiento | 20 puntos por día/ronda; 1 punto por hexágono; múltiples movimientos |
-| Anuncios | Visibles para todos; efectos declarativos aplicados por el motor/hook |
+| Conversación | 10 mensajes por agente por sesión; 1 punto por sesión nueva; 2 puntos por día (1 en la primera corrida) |
+| Teléfono | Perfil, anuncios, grupo de la ciudad, mensajes, billetera y memorias; privado para el dueño |
+| Fiscalía | Denuncias, mediación, investigación, sanción y apelación; `case-review` en el MVP |
+| ADK | No como núcleo; spike opcional detrás de `AgentRuntime` |
+| Anuncios | Visibles para todos; efectos declarativos aplicados por el motor/hook; notificación al teléfono |
 | UI | Configuración previa + observador read-only |
 | Hooks | Solo el equipo; los agentes no los escriben |
 | Informe | Automático en Markdown + gráficos |
@@ -820,6 +955,10 @@ Cada corrida guarda:
 | Esquema de efectos de eventos | Lista inicial ya definida; ampliar | Rodrigo |
 | Anuncios de la municipalidad | Manual, hook o política | Hernán / Rodrigo |
 | Radio del mapa | 5 hexágonos; ajustar según densidad | Rodrigo |
+| Puntos de conversación por día | 1, 2 o 3; empezar con 1 | Rodrigo |
+| Proceso de Fiscalía | Solo a denuncia o también de oficio | Hernán / Rodrigo |
+| Privacidad del teléfono | Qué es público y qué queda para el dueño | Rodrigo |
+| Moderación del grupo | Rate limit, reglas o moderador del sistema | Rodrigo |
 | Formato del informe | Markdown + gráficos; PDF/slides después | Rodrigo / Hernán |
 
 ## Enlaces
@@ -830,3 +969,4 @@ Cada corrida guarda:
 - [[05 - Prompts y perfiles|Prompts y perfiles]]
 - [[06 - Recursos y presupuesto|Recursos y presupuesto]]
 - [[07 - Checklist de ejecucion|Checklist de ejecución]]
+- [[08 - Evaluacion ADK|Evaluación ADK]]

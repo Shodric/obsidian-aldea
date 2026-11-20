@@ -24,7 +24,7 @@ actualizado: 2026-11-20
 | RF-07 | Aplicar vencimiento por lote | Must | Cada crédito recibido genera un lote con su propio vencimiento; el gasto usa FIFO |
 | RF-08 | Aplicar compromiso mínimo y sanciones | Must | Se puede sancionar la negativa a vender con demanda; no se sanciona la falta de demanda |
 | RF-09 | Confirmar entrega con código | Should | Una compra puede cerrarse con un código o confirmación explícita; las entregas diferidas usan escrow |
-| RF-10 | Dialogar 1 a 1 y en grupo | Should | Los agentes pueden enviar y recibir mensajes con contexto en el mismo hexágono |
+| RF-10 | Dialogar 1 a 1, en grupo y por teléfono | Must | El diálogo directo requiere el mismo hexágono; el grupo de la ciudad es remoto; cada agente puede enviar hasta 10 mensajes por sesión y cada sesión nueva cuesta 1 punto de conversación |
 | RF-11 | Mantener memoria | Must | Cada agente tiene un resumen de interacciones y percepciones |
 | RF-12 | Registrar todos los eventos | Must | Cada acción queda en un log con timestamp, agente, tool, motivo y resultado |
 | RF-13 | Calcular métricas | Must | El sistema calcula las métricas del diseño experimental al cerrar la corrida |
@@ -35,23 +35,31 @@ actualizado: 2026-11-20
 | RF-18 | Exportar datos crudos | Must | Los eventos, transacciones y mensajes se exportan a CSV/JSONL/SQLite |
 | RF-19 | Mundo de hexágonos y movimiento | Must | Cada agente tiene 20 puntos por día; moverse cuesta 1 por hexágono y se puede repetir |
 | RF-20 | Tablero de anuncios | Must | Todos los agentes ven los anuncios activos; los efectos declarativos los aplica el motor o un hook |
-| RF-21 | UI de configuración y observación | Should | Antes de iniciar se eligen agentes, repeticiones, días, semilla y anuncios; durante la corrida se ve el mapa y el estado |
+| RF-21 | UI de configuración y observación | Should | Antes de iniciar se eligen agentes, repeticiones, días, semilla, anuncios y presupuesto de conversación; durante la corrida se ve el mapa y el estado |
+| RF-22 | Teléfono del agente | Must | Cada agente tiene un teléfono con perfil (ID, edad, trabajo, historia), anuncios, grupo de la ciudad, mensajes directos, billetera, memorias y contactos; solo el dueño ve los datos privados |
+| RF-23 | Fiscalía y casos | Should | Existe el edificio Fiscalía; las denuncias, mediaciones, investigaciones, sanciones y apelaciones quedan registradas como `Case` |
+| RF-24 | Presupuesto de conversación | Must | `conversationPointsPerDay` es configurable; solo `move` y una sesión nueva de `talk` consumen puntos; comprar, vender, trabajar, descansar y leer el teléfono no consumen |
+| RF-25 | Anuncios por teléfono | Must | Cada anuncio activo genera una notificación en el teléfono de los agentes alcanzados; no hace falta ir a la municipalidad |
 
 ## 2. Requisitos de datos
 
 | ID | Entidad | Campos mínimos |
 |---|---|---|
-| RD-01 | Agente | `id`, `nombre`, `perfil`, `oficio`, `historia`, `recursos`, `necesidades`, `personalidad`, `memoria`, `creditos`, `efectivo`, `movimiento`, `casa_id`, `estado` |
+| RD-01 | Agente | `id`, `nombre`, `perfil`, `oficio`, `historia`, `recursos`, `necesidades`, `personalidad`, `memoria`, `creditos`, `efectivo`, `movimiento`, `conversacion`, `telefono_id`, `casa_id`, `estado` |
 | RD-02 | Oferta | `id`, `agente_id`, `tipo`, `categoria`, `descripcion`, `precio_creditos`, `stock`, `estado`, `creado_en` |
 | RD-03 | Lote de crédito | `id`, `propietario_id`, `monto`, `emitido_en`, `vence_en`, `origen`, `estado`, `parent_id` |
 | RD-04 | Transacción | `id`, `comprador_id`, `vendedor_id`, `oferta_id`, `monto`, `lotes_usados`, `estado`, `confirmada_en` |
-| RD-05 | Mensaje | `id`, `de`, `para`, `canal`, `texto`, `turno`, `resumen` |
+| RD-05 | Mensaje | `id`, `sesion_id`, `de`, `para`, `canal`, `texto`, `turno`, `resumen` |
 | RD-06 | Evento | `id`, `run_id`, `turno`, `agente_id`, `tipo`, `payload`, `motivo`, `timestamp` |
 | RD-07 | Sanción | `id`, `agente_id`, `tipo`, `motivo`, `inicio`, `fin`, `estado` |
 | RD-08 | Corrida | `run_id`, `escenario`, `config`, `semilla`, `modelo`, `inicio`, `fin`, `costo_estimado` |
 | RD-09 | Resultado | `run_id`, `metrica`, `valor`, `unidad`, `desagregado_por` |
-| RD-10 | Anuncio | `id`, `scope`, `category`, `title`, `body`, `startDay`, `endDay`, `effects`, `source`, `active` |
+| RD-10 | Anuncio | `id`, `scope`, `category`, `title`, `body`, `startDay`, `endDay`, `effects`, `source`, `active`, `delivery` |
 | RD-11 | Lugar | `id`, `q`, `r`, `tipo`, `nombre`, `agente_id`, `edificio_id` |
+| RD-12 | Teléfono | `id`, `owner_id`, `number`, `contacts`, `notifications`, `city_group_id`, `battery`, `locked` |
+| RD-13 | Sesión de chat | `id`, `channel`, `participant_ids`, `started_day`, `message_count`, `point_cost`, `status` |
+| RD-14 | Caso | `id`, `type`, `status`, `complainant_id`, `accused_id`, `transaction_id`, `description`, `evidence`, `resolution`, `sanction`, `opened_day`, `closed_day` |
+| RD-15 | Notificación | `id`, `phone_id`, `announcement_id`, `type`, `read`, `created_day` |
 
 **Reglas de datos**
 
@@ -77,6 +85,8 @@ actualizado: 2026-11-20
 | RNF-10 | Seguridad | Must | El simulador no ejecuta código generado por los agentes |
 | RNF-11 | Extensibilidad | Should | Se pueden agregar perfiles y escenarios sin tocar el núcleo |
 | RNF-12 | Trazabilidad | Must | Cada número del informe se puede reconstruir desde los datos crudos |
+| RNF-13 | Costo de conversación | Must | El costo de chats se estima antes de correr y se corta al llegar al límite; el informe muestra sesiones, mensajes y tokens por agente |
+| RNF-14 | Privacidad del teléfono | Must | Solo el dueño puede leer su perfil privado, memorias y billetera; los demás ven un perfil público acotado |
 
 ## 4. Requisitos de modelo y prompts
 
@@ -92,6 +102,8 @@ actualizado: 2026-11-20
 | RM-08 | Evaluación de adherencia | Should | Se mide cuántas respuestas son JSON válido y cuántas acciones son legales |
 | RM-09 | Modo mock | Must | Se puede correr sin LLM para probar el entorno |
 | RM-10 | Registro de prompts | Must | Se guarda el prompt exacto que recibió cada agente en cada turno |
+| RM-11 | Contexto de teléfono y chat | Must | El prompt incluye notificaciones, resumen del grupo, sesiones abiertas y puntos de conversación, sin filtrar datos privados de otros agentes |
+| RM-12 | Límite de mensajes por sesión | Must | El runtime corta la sesión al llegar a 10 mensajes del agente y obliga a abrir una nueva, con su costo |
 
 ## 5. Requisitos de análisis
 
@@ -102,6 +114,7 @@ actualizado: 2026-11-20
 | RA-03 | Gráficos | Should | Al menos 4 gráficos: circulación, vencimiento, concentración y participación |
 | RA-04 | Hallazgos | Must | El informe separa hechos, interpretaciones y recomendaciones |
 | RA-05 | Reproducibilidad | Must | El informe incluye configuración, semilla y versión del modelo |
+| RA-06 | Métricas de conversación | Should | Mensajes por agente, sesiones por día, uso de puntos, costo estimado, temas y efecto en confianza/intercambios |
 
 ## 6. Fuera de alcance
 
@@ -133,6 +146,10 @@ actualizado: 2026-11-20
 6. ¿Cómo se modela la municipalidad y quién publica los anuncios?
 7. ¿Se corre en local o en un VPS?
 8. ¿Cómo se valida que los agentes no están actuando como el modelo espera?
+9. ¿Cuántos puntos de conversación por día debe tener cada agente en la primera corrida: 1, 2 o 3?
+10. ¿La Fiscalía actúa solo a denuncia o también investiga de oficio?
+11. ¿El grupo de la ciudad tiene moderación automática o solo reglas de rate limit?
+12. ¿Qué información del teléfono es pública y cuál queda solo para el dueño?
 
 ## Enlaces
 

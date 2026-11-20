@@ -26,6 +26,7 @@ actualizado: 2026-11-20
 | [[05 - Prompts y perfiles]] | Personalidades, prompts, formato de acciones y guardrails |
 | [[06 - Recursos y presupuesto]] | Roles, herramientas, modelos y costos |
 | [[07 - Checklist de ejecucion]] | Paso a paso para correr la simulación y entregar el informe |
+| [[08 - Evaluacion ADK]] | Pros, contras y recomendación sobre Agent Development Kit |
 
 ## Objetivo
 
@@ -47,6 +48,8 @@ Probar el circuito de Aldea con agentes de IA que tengan personalidad, memoria y
 - Diseñar 4 perfiles de agente: optimista, neutro, especulativo y escéptico.
 - Modelar **10 agentes** elegidos por el usuario, con oferta, demanda, créditos y vencimiento.
 - Incluir diálogo libre, memoria, movimiento y capacidad de cambiar de opinión.
+- Incluir teléfono, grupo de la ciudad, anuncios por notificación y sesiones de chat de 10 mensajes con costo de 1 punto.
+- Incluir Fiscalía para denuncias, mediación y casos.
 - Ejecutar **5 repeticiones** por escenario.
 - Medir intercambios, circulación, vencimientos, concentración y conflictos.
 - Producir un informe con recomendaciones de parámetros.
@@ -94,6 +97,7 @@ Antes de escribir la primera línea del simulador tienen que estar definidos:
 - [ ] Los escenarios E1-E8 y sus variables.
 - [ ] Las métricas y la forma de calcularlas.
 - [ ] El modelo de lenguaje, el presupuesto y el límite de llamadas.
+- [ ] Los puntos de conversación por día, el límite de 10 mensajes por sesión y el costo de 1 punto por sesión.
 - [ ] El formato de datos y el mecanismo de reproducibilidad.
 - [ ] El criterio de éxito y el formato del informe.
 
@@ -138,6 +142,11 @@ Mitigaciones en [[06 - Recursos y presupuesto|Recursos y presupuesto]] y [[03 - 
 | Agentes | 10, elegidos por el usuario en la UI | Rodrigo / Hernán | Definido |
 | Repeticiones | 5 por escenario | Rodrigo | Definido |
 | Movimiento | 20 puntos por día; 1 punto por hexágono | Rodrigo | Definido |
+| Conversación | 10 mensajes por agente por sesión; 1 punto por sesión nueva | Rodrigo | Definido |
+| Puntos de conversación | 2 por día (1 para la primera corrida) | Rodrigo | Recomendado |
+| Teléfono | Perfil, anuncios, grupo de la ciudad, mensajes, billetera y memorias | Rodrigo | Definido |
+| Fiscalía | Denuncias, mediación, investigación y sanción | Rodrigo | Definido |
+| ADK | No como núcleo; spike opcional | Rodrigo | Definido |
 | Horizonte | 28 días (56 para segundo ciclo) | Rodrigo | Recomendado |
 | Formato del informe | Markdown + gráficos; PDF/slides después | Rodrigo / Hernán | Recomendado |
 | Presupuesto máximo | USD 0–30 para la primera etapa | Rodrigo / Hernán | Pendiente |
