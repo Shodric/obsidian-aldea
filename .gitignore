@@ -6,3 +6,11 @@
 # Archivos temporales
 *.tmp
 *.bak
+
+# Secretos y configuración local
+.env
+.env.*
+!.env.example
+
+# Datos generados por el simulador
+data/runs/

@@ -18,41 +18,56 @@ actualizado: 2026-11-20
 - [ ] Acordar presupuesto máximo.
 - [ ] Definir la pregunta principal de la primera corrida.
 - [ ] Recibir y revisar el simulador JSX de Hernán.
-- [ ] Recibir el modelo original 2016–2024.
-- [ ] Recibir los dos pitches de Aldea.
+- [x] Recibir el modelo original 2016–2024.
+- [x] Recibir los dos pitches de Aldea.
+- [x] Recibir la aproximación técnica v6 (con y sin token de recompensa).
 - [ ] Confirmar los parámetros base del circuito.
-- [ ] Elegir modo: mock, gratuito, DeepSeek o híbrido.
+- [ ] Elegir el roster de 10 agentes y sus fichas.
+- [ ] Elegir modo: mock, DeepSeek V4.1 Flash o híbrido.
 - [ ] Crear cuenta y API key si se usa LLM.
+- [ ] Completar `LLM_API_KEY` en `.env`.
 - [ ] Configurar límite de gasto y alertas.
-- [ ] Crear repositorio o carpeta de trabajo.
+- [x] Crear repositorio o carpeta de trabajo.
+- [x] Crear `.env.example` y `.gitignore` para secretos.
 - [ ] Crear estructura de datos y resultados.
 - [ ] Verificar que no haya datos personales reales.
+- [ ] Confirmar 10 agentes, 5 repeticiones, 28 días y 20 puntos de movimiento.
 
 ## 2. Diseño
 
 - [ ] Cerrar los 4 perfiles y sus porcentajes.
-- [ ] Definir atributos, motivaciones y reglas de decisión.
-- [ ] Cerrar el entorno: mercado, ciclo, vencimiento, precios y sanciones.
-- [ ] Cerrar los escenarios E1-E8.
+- [ ] Definir el roster y las fichas de los 10 agentes.
+- [ ] Definir atributos, historias, motivaciones y reglas de decisión.
+- [ ] Cerrar el entorno: mapa de hexágonos, edificios, casas, mercado, ciclo, vencimiento, precios y sanciones.
+- [ ] Cerrar los escenarios E1-E8 con 10 agentes.
 - [ ] Definir variables y niveles.
+- [ ] Definir 5 repeticiones por escenario y semillas.
 - [ ] Definir métricas, fórmulas y unidades.
-- [ ] Escribir los prompts y el esquema de acción.
+- [ ] Escribir los prompts y el esquema `ToolCall`.
+- [ ] Definir el tablero de anuncios y sus efectos.
 - [ ] Definir el formato de logs y resultados.
 - [ ] Definir el criterio de éxito.
 - [ ] Revisar el diseño con Hernán.
 
 ## 3. Construcción
 
-- [ ] Implementar configuración por archivo.
-- [ ] Implementar agentes y perfiles.
+- [ ] Implementar configuración por archivo (`RunConfig` + `.env`).
+- [ ] Implementar mundo de hexágonos, edificios, casas y locations.
+- [ ] Implementar agentes, perfiles, roster y memoria privada.
+- [ ] Implementar `ActionGateway` con validación Zod e identidad de sesión.
+- [ ] Implementar `RulesEngine`, `Ledger` y `EventLog`.
 - [ ] Implementar mercado y ofertas.
-- [ ] Implementar ledger de créditos.
-- [ ] Implementar emisión, transferencia, partición y vencimiento.
-- [ ] Implementar sanciones.
-- [ ] Implementar confirmación de entrega.
+- [ ] Implementar ledger de créditos por lotes.
+- [ ] Implementar emisión, transferencia, partición, FIFO y vencimiento.
+- [ ] Implementar compromiso mínimo y sanciones.
+- [ ] Implementar confirmación de entrega y escrow.
+- [ ] Implementar movimiento con 20 puntos por día.
 - [ ] Implementar diálogo y memoria.
+- [ ] Implementar tablero de anuncios y efectos declarativos.
+- [ ] Implementar hooks y sandbox.
 - [ ] Implementar adaptador mock.
-- [ ] Implementar adaptador LLM.
+- [ ] Implementar adaptador LLM (DeepSeek V4.1 Flash).
+- [ ] Implementar UI de configuración y mapa en tiempo real.
 - [ ] Implementar logs y métricas.
 - [ ] Implementar control de costo.
 - [ ] Implementar generador de informe.
@@ -67,6 +82,11 @@ actualizado: 2026-11-20
 - [ ] Test de vencimiento.
 - [ ] Test de sanción.
 - [ ] Test de acción inválida.
+- [ ] Test de identidad y tool no permitida.
+- [ ] Test de movimiento y límite de 20 puntos.
+- [ ] Test de anuncios y efectos.
+- [ ] Test de hook sin permiso.
+- [ ] Test de prompt injection.
 - [ ] Test de reproducibilidad.
 - [ ] Test de límite de costo.
 - [ ] Corrida de 1 agente y 7 días.
@@ -78,10 +98,10 @@ actualizado: 2026-11-20
 ## 5. Corrida
 
 - [ ] Congelar configuración y versión del código.
-- [ ] Registrar semilla por escenario.
-- [ ] Correr E1 con 3 semillas.
+- [ ] Registrar 5 semillas por escenario.
+- [ ] Correr E1 con 5 repeticiones.
 - [ ] Revisar resultados y costo de E1.
-- [ ] Correr E2-E8.
+- [ ] Correr E2-E8 con 5 repeticiones cada uno.
 - [ ] Monitorear costo y tiempo.
 - [ ] Detener si se supera el límite.
 - [ ] Guardar datos crudos por escenario.
@@ -119,6 +139,8 @@ actualizado: 2026-11-20
 La simulación se considera terminada cuando:
 
 - [ ] Todos los escenarios planificados se corrieron o se justificó su omisión.
+- [ ] Los 10 agentes elegidos y las 5 repeticiones se ejecutaron.
+- [ ] La UI permitió configurar roster, días, semilla y anuncios antes de iniciar.
 - [ ] Los datos crudos están archivados y son reproducibles.
 - [ ] El informe responde las preguntas de la nota principal.
 - [ ] Hay al menos 3 recomendaciones concretas de parámetros.

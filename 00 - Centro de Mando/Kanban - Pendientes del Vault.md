@@ -26,6 +26,9 @@ Estado de construcción del vault y del proyecto. Mover los ítems a medida que 
 
 ### Proyecto
 - [ ] Revisar el simulador JSX y verificar que sea seguro ejecutarlo. *(aún no recibido)*
+- [ ] Definir el roster definitivo de 10 agentes: nombre, edad, oficio, historia, personalidad y recursos iniciales.
+- [ ] Completar `LLM_API_KEY` en `.env` y validar el endpoint de DeepSeek V4.1 Flash.
+- [ ] Cerrar parámetros económicos: sueldo/plan social, precios, supermercado en etapa 1 y 2, y duración del día simulado.
 - [ ] Definir el territorio del piloto y los contactos locales.
 - [ ] Definir el alcance funcional del MVP y sus no-alcances.
 - [ ] Diseñar el piloto de 4 semanas y su marco de evaluación.
@@ -74,6 +77,8 @@ Estado de construcción del vault y del proyecto. Mover los ítems a medida que 
 - [x] Copias de trabajo en Markdown y índice de lectura rápida en `16 - Archivo/2026/Extraidos/`.
 - [x] Kanban actualizado con los pendientes y los ítems pospuestos.
 - [x] Segundo commit con los documentos de Hernán y las copias de trabajo.
+- [x] Arquitectura técnica y configuración de la simulación definidas: TypeScript, SQLite + JSONL, 10 agentes, 5 repeticiones, 20 movimientos por ronda, anuncios y hooks.
+- [x] Tercer commit con la arquitectura y el `.env.example` de la simulación.
 
 ## Enlaces
 

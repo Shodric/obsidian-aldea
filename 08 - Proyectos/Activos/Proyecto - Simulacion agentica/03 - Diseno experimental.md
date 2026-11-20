@@ -39,30 +39,30 @@ actualizado: 2026-11-20
 | ID | Agentes | Perfiles (opt/neut/espec/escép) | Vencimiento | Precio | Sanción | Propósito |
 |---|---|---|---|---|---|---|
 | E1 | 10 | 30/40/15/15 | 30 días | Fijo | Media | Línea base |
-| E2 | 30 | 25/40/20/15 | 30 días | Fijo | Media | Escalar manteniendo mezcla |
-| E3 | 30 | 25/20/15/40 | 30 días | Fijo | Media | Estrés por escepticismo |
-| E4 | 30 | 30/40/15/15 | 15 días | Fijo | Media | Vencimiento corto |
-| E5 | 30 | 30/40/15/15 | 60 días | Fijo | Media | Vencimiento largo |
-| E6 | 30 | 30/40/15/15 | 30 días | Negociado | Media | Regateo |
-| E7 | 30 | 30/40/15/15 | 30 días | Fijo | Fuerte | Sanción fuerte |
-| E8 | 30 | 30/40/15/15 | 30 días | Fijo | Débil | Sanción débil |
+| E2 | 10 | 30/20/15/35 | 30 días | Fijo | Media | Estrés por escepticismo |
+| E3 | 10 | 30/25/30/15 | 30 días | Fijo | Media | Estrés por especulación |
+| E4 | 10 | 30/40/15/15 | 15 días | Fijo | Media | Vencimiento corto |
+| E5 | 10 | 30/40/15/15 | 60 días | Fijo | Media | Vencimiento largo |
+| E6 | 10 | 30/40/15/15 | 30 días | Negociado | Media | Regateo |
+| E7 | 10 | 30/40/15/15 | 30 días | Fijo | Fuerte | Sanción fuerte |
+| E8 | 10 | 30/40/15/15 | 30 días | Fijo | Débil | Sanción débil |
 
-**Control:** E1 es la referencia para los escenarios de 10 agentes. Para los de 30, la referencia es E2.
+**Control:** E1 es la referencia. Cada escenario cambia una variable principal respecto de E1. La escala a 30 agentes queda para una fase posterior, fuera de esta corrida.
 
 ## 4. Variables
 
 | Variable | Niveles | Tipo |
 |---|---|---|
-| Cantidad de agentes | 10, 30, 50 | Independiente |
-| Perfil optimista | 15%, 30%, 50% | Independiente |
-| Perfil especulativo | 5%, 15%, 25% | Independiente |
-| Perfil escéptico | 5%, 15%, 40% | Independiente |
+| Cantidad de agentes | 10 en fase 1; 30 en fase 2 opcional | Control |
+| Perfil optimista | 20%, 30%, 40% | Independiente |
+| Perfil especulativo | 15%, 25%, 30% | Independiente |
+| Perfil escéptico | 15%, 25%, 35% | Independiente |
 | Vencimiento | 15, 30, 60 días | Independiente |
 | Precio | Fijo, negociado | Independiente |
 | Sanción | Débil, media, fuerte | Independiente |
 | Confirmación de entrega | Con código, sin código | Independiente |
 | Duración | 28, 56 días | Control |
-| Semilla | 3 semillas por escenario | Control |
+| Repeticiones | 5 por escenario | Control |
 
 ## 5. Métricas
 
@@ -87,18 +87,18 @@ actualizado: 2026-11-20
 ## 6. Diseño de la corrida
 
 - **Horizonte:** 28 días por ciclo; 56 días para observar un segundo ciclo.
-- **Turnos:** 1 turno = 1 día. Cada agente actúa una vez por turno.
-- **Repeticiones:** 3 semillas por escenario para la primera etapa.
-- **Semillas:** fijas y registradas; no se cambian entre repeticiones del mismo escenario.
-- **Modelo:** primero mock deterministico; luego LLM con temperatura baja para reducir varianza.
+- **Turnos:** 1 turno = 1 día. Cada agente actúa una vez por turno, con hasta 5 tool calls y 20 puntos de movimiento.
+- **Repeticiones:** 5 por escenario, con semillas fijas y registradas.
+- **Semillas:** no se cambian entre repeticiones del mismo escenario; se usan para medir variabilidad.
+- **Modelo:** primero mock deterministico; luego LLM con temperatura 0,5 para reducir varianza.
 - **Datos:** se guardan eventos, transacciones, mensajes, configuración y resultados.
-- **Costo:** se estima antes de cada corrida y se corta si supera el límite.
+- **Costo:** se estima antes de cada corrida y se corta si supera el límite. 10 agentes × 28 días × 5 repeticiones = 1.400 turnos; hasta 7.000 tool calls si se usan 5 por turno.
 
 ## 7. Plan de análisis
 
 1. **Validación de datos:** verificar que no falten eventos, que los saldos cuadren y que no haya créditos negativos.
 2. **Estadística descriptiva:** medias, medianas, desvíos y rangos por escenario.
-3. **Comparación:** E2 contra E3-E8; E1 contra E2 para ver el efecto de escala.
+3. **Comparación:** E2-E8 contra E1, cada uno con una variable principal distinta. No se compara escala en la fase 1.
 4. **Series temporales:** circulación, emisión y vencimiento por día.
 5. **Concentración:** Gini al cierre y evolución.
 6. **Análisis cualitativo:** mensajes, conflictos y atajos detectados.
@@ -112,7 +112,7 @@ actualizado: 2026-11-20
 | Sesgo de cooperación de los LLM | Resultados demasiado optimistas | Forzar conflicto, usar perfiles escépticos y especulativos |
 | Prompts que inducen la respuesta | Los agentes “actúan” el guion | Prompts neutrales y pruebas de adherencia |
 | Abstracción del territorio | No representa un barrio real | Validar supuestos con Hernán y datos de campo |
-| Pocas repeticiones | Ruido | 3 semillas y análisis de sensibilidad |
+| Pocas repeticiones | Ruido | 5 repeticiones y análisis de sensibilidad |
 | Costo | Menos corridas | Modo mock y modelos baratos |
 | Sobreinterpretación | Decisiones basadas en ficción | Informe separa evidencia, interpretación y recomendación |
 

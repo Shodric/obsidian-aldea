@@ -45,7 +45,8 @@ Convertir la simulación en un proceso reproducible, barato y útil para decidir
 - Definir el entorno: mercado, ciclo, vencimiento, precios y sanciones.
 - Cerrar los escenarios E1-E8 y las variables.
 - Definir las métricas, fórmulas y unidades.
-- Escribir los prompts y el esquema de acciones.
+- Escribir los prompts y el esquema `ToolCall`.
+- Definir el mundo de hexágonos, el movimiento y el tablero de anuncios.
 - Definir el formato de los datos de salida.
 
 **Entregable:** [[03 - Diseno experimental|Diseño experimental]] y [[05 - Prompts y perfiles|Prompts y perfiles]] completos.
@@ -56,9 +57,10 @@ Convertir la simulación en un proceso reproducible, barato y útil para decidir
 
 **Objetivo:** tener un simulador que corra de punta a punta.
 
-- Implementar el entorno y el reloj de la simulación.
+- Implementar el entorno, el reloj y el mundo de hexágonos.
 - Implementar el registro de agentes, ofertas, créditos y transacciones.
-- Implementar el motor de reglas: emisión, transferencia, vencimiento y sanción.
+- Implementar el motor de reglas: emisión, transferencia, vencimiento, movimiento y sanción.
+- Implementar el `ActionGateway`, el toolbelt y el tablero de anuncios.
 - Implementar el adaptador de modelo (mock, gratuito o pago).
 - Implementar el registro de eventos y el cálculo de métricas.
 - Implementar el generador de informe y gráficos.
@@ -87,7 +89,7 @@ Convertir la simulación en un proceso reproducible, barato y útil para decidir
 
 **Objetivo:** ejecutar los escenarios y guardar los datos.
 
-- Correr E1-E8 con la cantidad de repeticiones definida.
+- Correr E1-E8 con 5 repeticiones por escenario.
 - Guardar configuración, semilla, versión del modelo y datos crudos.
 - Monitorear costo y tiempo.
 - Detener una corrida si el costo supera el límite.

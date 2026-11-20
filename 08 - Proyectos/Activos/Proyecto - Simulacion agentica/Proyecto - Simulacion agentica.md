@@ -13,7 +13,7 @@ actualizado: 2026-11-20
 # Proyecto — Simulación agéntica
 
 > [!info] Estado
-> **Pospuesto para otro momento.** La planificación está completa y vive en esta carpeta; la ejecución todavía no empezó. No se necesita presupuesto hasta definir el modelo, la fecha y el alcance de la primera corrida.
+> **Pospuesto para otro momento.** La planificación y la arquitectura están cerradas; la ejecución todavía no empezó. El modelo, el lenguaje, los agentes y las repeticiones ya están definidos. Falta la API key, el roster definitivo y la fecha de la primera corrida.
 
 ## Qué contiene esta carpeta
 
@@ -33,7 +33,7 @@ Probar el circuito de Aldea con agentes de IA que tengan personalidad, memoria y
 
 ## Preguntas que debe responder
 
-1. ¿El circuito arranca y se sostiene con 10–30 agentes?
+1. ¿El circuito arranca y se sostiene con 10 agentes?
 2. ¿Qué proporción de créditos queda sin usar o vence?
 3. ¿Los especuladores acaparan o estabilizan el mercado?
 4. ¿Qué pasa cuando sube el porcentaje de escépticos?
@@ -45,8 +45,9 @@ Probar el circuito de Aldea con agentes de IA que tengan personalidad, memoria y
 ## Alcance
 
 - Diseñar 4 perfiles de agente: optimista, neutro, especulativo y escéptico.
-- Modelar 10–30 agentes con oferta, demanda, créditos y vencimiento.
-- Incluir diálogo, memoria y capacidad de cambiar de opinión.
+- Modelar **10 agentes** elegidos por el usuario, con oferta, demanda, créditos y vencimiento.
+- Incluir diálogo libre, memoria, movimiento y capacidad de cambiar de opinión.
+- Ejecutar **5 repeticiones** por escenario.
 - Medir intercambios, circulación, vencimientos, concentración y conflictos.
 - Producir un informe con recomendaciones de parámetros.
 
@@ -76,11 +77,12 @@ El detalle de cada fase está en [[01 - Plan de ejecucion|Plan de ejecución]].
 
 | Hito | Fecha objetivo | Estado |
 |---|---|---|
-| Insumos de Hernán recibidos | Por confirmar | Pendiente |
+| Insumos de Hernán recibidos | 2026-11-20 | Listo (falta el JSX) |
 | Perfiles y métricas definidos | Por confirmar | Pendiente |
+| Roster de 10 agentes elegido | Por confirmar | Pendiente |
 | Arnés de simulación funcionando | Por confirmar | Pendiente |
 | Primera corrida con 10 agentes | Por confirmar | Pendiente |
-| Corrida con 30 agentes | Por confirmar | Pendiente |
+| Cinco repeticiones completas | Por confirmar | Pendiente |
 | Informe de resultados | Por confirmar | Pendiente |
 
 ## Requisitos mínimos para ejecutar
@@ -99,8 +101,9 @@ El detalle está en [[02 - Requisitos|Requisitos]] y [[07 - Checklist de ejecuci
 
 ## Dependencias
 
-- Archivos de Hernán: simulador JSX, pitches y modelo original 2016–2024.
+- Archivos de Hernán: modelo original y pitches recibidos; falta el simulador JSX.
 - Definición de parámetros del circuito: vencimiento, precios, techos y sanciones.
+- Modelo DeepSeek v4.1 Flash configurado en `.env` y API key disponible.
 - Presupuesto de modelos: USD 0–30 para la primera etapa.
 - Una persona con tiempo para construir y analizar el arnés.
 - Un lugar donde guardar datos crudos y resultados.
@@ -126,14 +129,18 @@ Mitigaciones en [[06 - Recursos y presupuesto|Recursos y presupuesto]] y [[03 - 
 
 ## Decisiones pendientes antes de correr
 
-| Decisión | Opciones | Responsable | Estado |
+| Decisión | Elección | Responsable | Estado |
 |---|---|---|---|
-| Modelo de lenguaje | Gratuito, DeepSeek, premium | Rodrigo | Pendiente |
-| Presupuesto máximo | USD 0, USD 10–30, USD 30–100 | Rodrigo / Hernán | Pendiente |
-| Modo de simulación | Deterministico, LLM, híbrido | Rodrigo | Pendiente |
-| Cantidad de repeticiones | 1, 3, 5 por escenario | Rodrigo | Pendiente |
-| Horizonte | 28 días, 56 días | Rodrigo | Pendiente |
-| Formato del informe | Markdown, PDF, slides | Rodrigo / Hernán | Pendiente |
+| Lenguaje | TypeScript + Node 22 | Rodrigo | Definido |
+| Persistencia | SQLite + JSONL | Rodrigo | Definido |
+| Modelo de lenguaje | DeepSeek v4.1 Flash vía `.env` | Rodrigo | Definido |
+| Modo de simulación | Híbrido (mock + LLM) | Rodrigo | Definido |
+| Agentes | 10, elegidos por el usuario en la UI | Rodrigo / Hernán | Definido |
+| Repeticiones | 5 por escenario | Rodrigo | Definido |
+| Movimiento | 20 puntos por día; 1 punto por hexágono | Rodrigo | Definido |
+| Horizonte | 28 días (56 para segundo ciclo) | Rodrigo | Recomendado |
+| Formato del informe | Markdown + gráficos; PDF/slides después | Rodrigo / Hernán | Recomendado |
+| Presupuesto máximo | USD 0–30 para la primera etapa | Rodrigo / Hernán | Pendiente |
 
 ## Enlaces
 

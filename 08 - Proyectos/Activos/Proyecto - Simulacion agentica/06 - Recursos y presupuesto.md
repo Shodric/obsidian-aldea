@@ -24,12 +24,16 @@ actualizado: 2026-11-20
 
 | Herramienta | Uso | Costo |
 |---|---|---|
-| Python 3.11+ | Simulador | Gratis |
+| TypeScript + Node 22 | Simulador | Gratis |
 | Git | Versionado | Gratis |
-| SQLite | Persistencia | Gratis |
-| pandas + matplotlib | Análisis y gráficos | Gratis |
-| Jupyter o scripts | Exploración | Gratis |
-| Editor de código | Desarrollo | Gratis |
+| SQLite + JSONL | Persistencia y event log | Gratis |
+| Zod | Validación de acciones y configuración | Gratis |
+| Vitest | Pruebas | Gratis |
+| React + Vite | UI del simulador | Gratis |
+| SVG/Canvas o PixiJS | Mapa de hexágonos | Gratis |
+| SSE | Actualización en tiempo real | Gratis |
+| Chart.js o Vega-Lite | Gráficos | Gratis |
+| pnpm + tsx | Desarrollo y ejecución | Gratis |
 | API de LLM | Agentes con lenguaje | Variable |
 | Almacenamiento | Datos y resultados | Gratis o bajo costo |
 
@@ -39,8 +43,10 @@ actualizado: 2026-11-20
 |---|---|---|---|---|
 | Modo mock | Sin costo, reproducible | No hay lenguaje emergente | USD 0 | Pruebas y línea base |
 | Modelos gratuitos | Sin costo | Límite de llamadas y calidad variable | USD 0 | Primera exploración |
-| DeepSeek | Buen costo/calidad | Requiere cuenta y verificación | Bajo | Corrida principal |
+| DeepSeek V4.1 Flash | Buen costo/calidad; elegido por el usuario | Requiere cuenta, API key y verificación | Bajo | Corrida principal |
 | Modelos premium | Mejor razonamiento | Costo alto | Alto | Casos puntuales |
+
+El modelo y el endpoint se configuran en `.env` (`LLM_PROVIDER`, `LLM_MODEL`, `LLM_BASE_URL`, `LLM_API_KEY`). La API key no se commitea.
 
 > [!warning] Precios
 > Los precios de los modelos cambian. Verificar tarifas, límites y condiciones al momento de contratar. No usar créditos compartidos ni cuentas personales para datos sensibles.
@@ -56,12 +62,13 @@ costo_corrida =
 
 **Ejemplo ilustrativo, no cotización:**
 
-- 30 agentes × 28 días = 840 llamadas.
+- 10 agentes × 28 días × 5 repeticiones = 1.400 turnos.
+- Hasta 5 tool calls por turno, pero una llamada al modelo por turno (más reintentos y reflexiones).
 - 3.000 tokens de entrada y 400 de salida por llamada.
 - Precio bajo de referencia: USD 0,14 por millón de entrada y USD 0,28 por millón de salida.
-- Costo estimado: menos de USD 1 por corrida, sin contar reintentos ni resúmenes.
+- Costo estimado: menos de USD 1 por corrida completa, sin contar reintentos ni resúmenes.
 
-Con prompts más largos, memoria y reintentos, el costo puede multiplicarse. Por eso el límite duro es obligatorio.
+Con prompts más largos, memoria y reintentos, el costo puede multiplicarse. Por eso el límite duro es obligatorio. El simulador debe registrar tokens y costo por turno, agente y corrida.
 
 ## 5. Escenarios de presupuesto
 
@@ -90,13 +97,14 @@ Con prompts más largos, memoria y reintentos, el costo puede multiplicarse. Por
 ## 7. Insumos que deben estar disponibles
 
 - [ ] Simulador JSX de Hernán.
-- [ ] Modelo original de moneda social 2016–2024.
-- [ ] Los dos pitches de Aldea.
+- [x] Modelo original de moneda social 2016–2024.
+- [x] Los dos pitches de Aldea.
+- [x] Aproximación técnica v6 (con y sin token de recompensa).
 - [ ] Parámetros del circuito: vencimiento, techos, precios y sanciones.
-- [ ] Definición de perfiles y porcentajes.
+- [x] Definición de perfiles y porcentajes.
 - [ ] Presupuesto máximo aprobado.
 - [ ] Cuenta y API key del proveedor elegido.
-- [ ] Carpeta o repositorio para datos crudos.
+- [x] Carpeta o repositorio para datos crudos.
 
 ## 8. Compras y trámites
 
@@ -113,7 +121,7 @@ Con prompts más largos, memoria y reintentos, el costo puede multiplicarse. Por
 | Riesgo | Impacto | Mitigación |
 |---|---|---|
 | Falta de tiempo de Rodrigo | Retraso | Ejecutar por bloques de 2–3 días |
-| Hernán no envía los archivos | Diseño incompleto | Avanzar con supuestos propios y validar después |
+| Falta el simulador JSX de Hernán | Diseño incompleto | Avanzar con el diseño propio y contrastar cuando llegue |
 | Costo mayor al previsto | Corrida incompleta | Límite duro y modo mock |
 | Modelo gratuito con límites | Corrida cortada | Cachear y reducir agentes |
 | Pérdida de datos | Resultados irrecuperables | Git + copia de datos crudos |

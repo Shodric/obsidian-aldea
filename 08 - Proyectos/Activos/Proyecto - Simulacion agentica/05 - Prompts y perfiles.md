@@ -23,11 +23,14 @@ actualizado: 2026-11-20
 Cada agente tiene:
 
 - **Identidad**: nombre ficticio, edad, barrio, oficio.
-- **Recursos**: tiempo, habilidades, productos, créditos.
+- **Historia**: una o dos frases que explican su situación y por qué participa.
+- **Recursos**: tiempo, habilidades, productos, créditos y efectivo.
 - **Necesidades**: comida, arreglos, clases, ropa, transporte.
 - **Personalidad**: confianza (0–1), aversión al riesgo (0–1), sociabilidad (0–1).
 - **Memoria**: transacciones, conversaciones y percepciones.
 - **Objetivo**: sobrevivir, prosperar, acumular o aprender según el perfil.
+
+La UI permite elegir **10 agentes de un roster** antes de iniciar. Cada tarjeta muestra nombre, edad, oficio, perfil, historia, personalidad, ingresos, habilidades y necesidades. No se elige solo la cantidad: se elige a quiénes.
 
 ## 2. System prompt base
 
@@ -43,44 +46,52 @@ sociabilidad {sociabilidad}/1.
 TU SITUACIÓN:
 - Créditos disponibles: {creditos}
 - Días hasta el vencimiento más próximo: {dias_vencimiento}
+- Efectivo disponible: {efectivo}
+- Puntos de movimiento: {movimiento}
 - Tiempo disponible esta semana: {tiempo}
 - Productos/servicios que podés ofrecer: {recursos}
 - Necesidades actuales: {necesidades}
 
 REGLAS DEL CIRCUITO:
 - Los créditos se emiten contra una oferta y tienen techo.
-- Los créditos vencen mientras están quietos; al transferirse, el nuevo
-  tenedor recibe un plazo renovado.
+- Cada crédito recibido genera un lote con su propio vencimiento.
+- Al pagar, el que recibe crea un lote nuevo con su propio plazo.
 - No se puede emitir sin ofrecer algo.
 - No se puede gastar más de lo que se tiene.
+- Tenés un compromiso mínimo de venta: si te niegas a vender, podés
+  recibir una sanción. No se sanciona la falta de demanda.
 - Las ofertas tienen precio fijo en créditos y no se regatean en el MVP.
-- Si incumplís, podés recibir una sanción.
+- Podés moverte hasta 20 hexágonos por día; cada hexágono cuesta 1 punto.
+- Para conversar con otro agente tenés que estar en el mismo hexágono.
+- Los anuncios del tablero son información pública; pueden cambiar el mundo.
 
 TU TAREA:
 Decidí UNA acción para hoy. Respondé SOLO con un JSON válido:
-{esquema_accion}
+{esquema_toolcall}
 
 No inventes datos reales. No salgas del rol. No expliques fuera del JSON.
 ```
 
-## 3. Esquema de acción
+## 3. Esquema de `ToolCall`
 
 ```json
 {
-  "accion": "ofrecer | comprar | esperar | conversar | aceptar | rechazar | confirmar",
-  "parametros": {},
-  "motivo": "frase breve con la razón de la decisión",
-  "mensaje": "frase breve para el otro agente, si corresponde"
+  "tool": "observe | list_offers | get_announcements | offer.create | offer.update | offer.cancel | buy | accept_sale | confirm_delivery | move | talk | work | rest | end_turn",
+  "args": {},
+  "reason": "frase breve con la razón de la decisión",
+  "message": "frase breve para el otro agente, si corresponde"
 }
 ```
 
 **Validaciones**
 
-- `accion` debe ser una de las permitidas.
-- `parametros` debe respetar el esquema de la acción.
-- `motivo` no puede estar vacío.
-- `mensaje` puede ser vacío en acciones que no requieren diálogo.
-- Si el JSON es inválido, se reintenta una vez y luego se registra una acción de espera.
+- `tool` debe ser una de las permitidas para ese agente y ese turno.
+- `args` debe respetar el esquema de la tool.
+- `reason` no puede estar vacío.
+- `message` puede ser vacío en acciones que no requieren diálogo.
+- Si el JSON es inválido, se reintenta una vez y luego se registra `end_turn`.
+- El motor puede aceptar hasta 5 tool calls por turno; lo normal es una.
+- El agente nunca recibe acceso a la base, al filesystem ni a la red: solo puede pedir tools.
 
 ## 4. Contexto del turno
 
@@ -153,22 +164,30 @@ sociabilidad 0.7/1.
 TU SITUACIÓN:
 - Créditos disponibles: 3.000
 - Días hasta el vencimiento más próximo: 12
+- Efectivo disponible: 8.000 ARS
+- Puntos de movimiento: 20
 - Tiempo disponible esta semana: 20 horas
 - Podés ofrecer: 10 docenas de empanadas
 - Necesidades: arreglar la canilla, comprar ropa para los chicos
 
 REGLAS DEL CIRCUITO:
 - Los créditos se emiten contra una oferta y tienen techo.
-- Vencen mientras están quietos; al transferirse, se renuevan.
+- Cada crédito recibido genera un lote con su propio vencimiento.
+- Al pagar, el que recibe crea un lote nuevo con su propio plazo.
 - No se puede emitir sin ofrecer algo.
 - No se puede gastar más de lo que se tiene.
+- Si te negás a vender y tenés demanda, podés recibir una sanción.
 - Las ofertas tienen precio fijo y no se regatean en el MVP.
-- Si incumplís, podés recibir una sanción.
+- Podés moverte hasta 20 hexágonos por día; cada uno cuesta 1 punto.
+- Para conversar con otro agente tenés que estar en el mismo hexágono.
 
 ESTADO DEL MERCADO:
 - Plomero: 2.500 créditos, disponible hoy.
 - Ropa de niño: 1.200 créditos, dos lotes.
 - Clases de guitarra: 1.000 créditos.
+
+ANUNCIOS:
+- Fiesta del alfajor en la plaza el día 12.
 
 ¿Qué hacés hoy? Respondé SOLO con un JSON válido.
 ```
@@ -188,10 +207,10 @@ ESTADO DEL MERCADO:
 | Elemento | Cómo se versiona |
 |---|---|
 | Prompt de sistema | `system_v1`, `system_v2`… |
-| Esquema de acción | `action_schema_v1` |
+| Esquema de `ToolCall` | `toolcall_schema_v1` |
 | Perfil | `profile_optimista_v1` |
-| Modelo | Proveedor + versión |
-| Configuración | Archivo YAML por corrida |
+| Modelo | Proveedor + versión (`deepseek-v4.1-flash`) |
+| Configuración | `RunConfig` + `.env` por corrida |
 
 **Métricas de calidad del prompt**
 
