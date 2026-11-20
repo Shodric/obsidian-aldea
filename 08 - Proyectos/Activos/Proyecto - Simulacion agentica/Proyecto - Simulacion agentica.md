@@ -22,6 +22,7 @@ actualizado: 2026-11-20
 
 | Documento | Para qué sirve |
 |---|---|
+| [[00A - Concepto y modelo economico]] | Qué es Aldea, qué es un bono y qué se quiere probar |
 | [[01 - Plan de ejecucion]] | Fases, actividades, entregables y puertas de decisión |
 | [[02 - Requisitos]] | Qué tiene que tener el simulador para considerarse listo |
 | [[03 - Diseno experimental]] | Hipótesis, escenarios E1-E8, métricas y análisis |

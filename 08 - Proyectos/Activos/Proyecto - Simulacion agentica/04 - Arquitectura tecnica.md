@@ -964,6 +964,7 @@ Cada corrida guarda:
 ## Enlaces
 
 - [[Proyecto - Simulacion agentica|Proyecto — Simulación agéntica]]
+- [[00A - Concepto y modelo economico|Concepto y modelo económico]]
 - [[02 - Requisitos|Requisitos]]
 - [[03 - Diseno experimental|Diseño experimental]]
 - [[05 - Prompts y perfiles|Prompts y perfiles]]

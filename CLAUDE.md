@@ -99,7 +99,9 @@ actualizado: 2026-11-20
 
 | Término | Definición |
 |---|---|
+| **Bono** | Nombre para el usuario del crédito de intercambio. |
 | **Crédito de intercambio** | Unidad de cuenta gratuita y caduca que representa el derecho a recibir bienes o servicios del circuito. |
+| **Compromiso mínimo** | Ventas que el participante debe aceptar por haber recibido la emisión inicial. No caduca con el bono. |
 | **Vencimiento en posesión** | El crédito pierde validez mientras está quieto en una wallet; al transferirse, el nuevo tenedor recibe un plazo renovado. |
 | **UTXO** | Modelo de contabilidad de Bitcoin: cada crédito es una salida no gastada que se puede partir y transferir. |
 | **Prosumidor** | Participante que produce y consume dentro del circuito. |

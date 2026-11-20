@@ -41,6 +41,7 @@ Convertir la simulación en un proceso reproducible, barato y útil para decidir
 
 **Objetivo:** dejar el experimento especificado antes de programar.
 
+- Cerrar el concepto y el modelo económico en [[00A - Concepto y modelo economico|00A]].
 - Cerrar los 4 perfiles y sus atributos.
 - Definir el entorno: mercado, ciclo, vencimiento, precios y sanciones.
 - Cerrar los escenarios E1-E8 y las variables.

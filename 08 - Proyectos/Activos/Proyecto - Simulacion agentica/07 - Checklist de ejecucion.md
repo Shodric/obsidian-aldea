@@ -16,6 +16,7 @@ actualizado: 2026-11-20
 - [ ] Confirmar que la simulación se va a ejecutar ahora (no está pospuesta).
 - [ ] Designar responsable de la corrida.
 - [ ] Acordar presupuesto máximo.
+- [ ] Revisar y aprobar el concepto y el modelo económico en [[00A - Concepto y modelo economico|00A]].
 - [ ] Definir la pregunta principal de la primera corrida.
 - [ ] Recibir y revisar el simulador JSX de Hernán.
 - [x] Recibir el modelo original 2016–2024.
