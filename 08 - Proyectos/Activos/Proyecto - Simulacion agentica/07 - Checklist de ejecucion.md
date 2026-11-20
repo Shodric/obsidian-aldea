@@ -35,6 +35,7 @@ actualizado: 2026-11-20
 - [ ] Confirmar 10 agentes, 5 repeticiones, 28 días y 20 puntos de movimiento.
 - [ ] Confirmar puntos de conversación por día, 10 mensajes por sesión y costo de 1 punto por sesión.
 - [ ] Revisar la evaluación de ADK y decidir si se usa como spike opcional, no como núcleo.
+- [ ] Revisar la idea del bono como obligación y decidir si E9 se corre después de E1-E8.
 
 ## 2. Diseño
 

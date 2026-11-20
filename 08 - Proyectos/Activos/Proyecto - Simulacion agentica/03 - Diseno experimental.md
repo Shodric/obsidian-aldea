@@ -49,6 +49,16 @@ actualizado: 2026-11-20
 
 **Control:** E1 es la referencia. Cada escenario cambia una variable principal respecto de E1. La escala a 30 agentes queda para una fase posterior, fuera de esta corrida.
 
+### 3.1 E9 propuesto — matching de la DAO
+
+No forma parte de la primera corrida. Se propone para después de E1-E8:
+
+| ID | Agentes | Vencimiento | Precio | Sanción | DAO matching | Propósito |
+|---|---|---|---|---|---|---|
+| E9 | 10 | 30 días | Fijo | Media | Sí | Medir si la DAO encuentra contraprestaciones y mejora el cumplimiento |
+
+Comparación: E9 contra E1. La DAO envía ofertas de trabajo/productos a los agentes que tienen un compromiso; el agente puede aceptar o rechazar. Se miden aceptación, cumplimiento, vencimiento, presión y costo. Ver [[09 - Ideas en analisis - Bono como obligacion negociable|Bono como obligación negociable]].
+
 ## 4. Variables
 
 | Variable | Niveles | Tipo |
@@ -60,6 +70,7 @@ actualizado: 2026-11-20
 | Vencimiento | 15, 30, 60 días | Independiente |
 | Precio | Fijo, negociado | Independiente |
 | Sanción | Débil, media, fuerte | Independiente |
+| Matching de la DAO | Sin, con | Independiente (E9) |
 | Confirmación de entrega | Con código, sin código | Independiente |
 | Duración | 28, 56 días | Control |
 | Repeticiones | 5 por escenario | Control |
@@ -86,6 +97,10 @@ actualizado: 2026-11-20
 | Mensajes | Mensajes enviados por agente, canal y día | # |
 | Uso de puntos de conversación | Puntos consumidos / disponibles | % |
 | Casos de Fiscalía | Casos abiertos, mediados y resueltos | # |
+| Matches de la DAO | Ofertas de contraprestación enviadas | # |
+| Aceptación de matches | Matches aceptados / enviados | % |
+| Tiempo hasta el match | Días entre obligación y primer match aceptado | días |
+| Presión percibida | Rechazos por incompatibilidad o exceso de ofertas | 1–5 |
 | Satisfacción | Promedio de percepción declarada | 1–5 |
 | Costo | Gasto estimado en modelos, separando turnos y chat | USD |
 
@@ -144,4 +159,5 @@ actualizado: 2026-11-20
 - [[02 - Requisitos|Requisitos]]
 - [[04 - Arquitectura tecnica|Arquitectura técnica]]
 - [[05 - Prompts y perfiles|Prompts y perfiles]]
+- [[09 - Ideas en analisis - Bono como obligacion negociable|Bono como obligación negociable]]
 - [[10 - Modelo Economico y Tokenomia/Simulacion - Parametros y resultados|Simulación — Parámetros y resultados]]

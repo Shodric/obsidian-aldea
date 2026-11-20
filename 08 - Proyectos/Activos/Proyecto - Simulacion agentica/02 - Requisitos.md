@@ -127,6 +127,7 @@ actualizado: 2026-11-20
 - Predicción de adopción.
 - Token de recompensa.
 - Editor avanzado de eventos en la UI (queda para una fase posterior).
+- Matching activo de la DAO para obligaciones de contraprestación (idea E9, posterior a E1-E8).
 
 ## 7. Supuestos
 

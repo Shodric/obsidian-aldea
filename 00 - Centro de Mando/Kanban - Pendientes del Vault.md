@@ -31,6 +31,7 @@ Estado de construcción del vault y del proyecto. Mover los ítems a medida que 
 - [ ] Cerrar parámetros económicos: sueldo/plan social, precios, supermercado en etapa 1 y 2, y duración del día simulado.
 - [ ] Validar con Hernán los puntos de conversación por día, el límite de 10 mensajes por sesión y el proceso de Fiscalía.
 - [ ] Definir qué información del teléfono es pública y cuál queda solo para el dueño.
+- [ ] Analizar con Hernán la idea del bono como obligación y el matching de la DAO (E9, después de E1-E8).
 - [ ] Definir el territorio del piloto y los contactos locales.
 - [ ] Definir el alcance funcional del MVP y sus no-alcances.
 - [ ] Diseñar el piloto de 4 semanas y su marco de evaluación.
@@ -85,6 +86,7 @@ Estado de construcción del vault y del proyecto. Mover los ítems a medida que 
 - [x] Evaluación de ADK documentada: no como núcleo; spike opcional.
 - [x] Cuarto commit con teléfono, chats, Fiscalía y evaluación de ADK.
 - [x] Repositorio `aldea-simulator` creado con documentación inicial, sin código.
+- [x] Idea del bono como obligación y DAO matching registrada como análisis futuro (E9).
 
 ## Enlaces
 

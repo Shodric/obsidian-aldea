@@ -98,6 +98,20 @@ Si falla la oferta, el bono pierde valor aunque el sistema funcione técnicament
 | NFT | Es digital y trazable | Es fungible y divisible; no representa un activo único |
 | Valor negociable | Puede circular | No promete rentabilidad ni convertibilidad; no se comercializa |
 
+### 2.7 Idea en análisis: el bono como obligación
+
+Quedó registrada una idea para analizar más adelante: **el bono no solo daría un derecho, también una obligación**. La DAO podría gestionar esa obligación enviando ofertas de trabajo, productos o servicios a la persona que la tiene, para que pueda cumplirla.
+
+Hay tres lecturas posibles:
+
+| Lectura | Quién tiene la obligación | Implicancia |
+|---|---|---|
+| A | El que recibió la emisión inicial | Es el modelo actual + matching de la DAO |
+| B | El emisor del bono, que la transfiere con el título | Se parece a una obligación negociable; muy riesgoso legalmente |
+| C | El comprador, al adquirir un producto o servicio | Se parece a un crédito mutuo o cámara de compensación |
+
+**Cuidado con el lenguaje:** “obligación negociable” es un término del mercado de capitales y no describe este bono. Hacia afuera conviene hablar de **compromiso de contraprestación** o **derecho de intercambio con compromiso**. La idea completa, con pros, contras, riesgos y un experimento E9, está en [[09 - Ideas en analisis - Bono como obligacion negociable|Bono como obligación negociable]].
+
 ## 3. El circuito en una página
 
 ```text
@@ -291,6 +305,7 @@ El simulador no está para “ver qué pasa”. Está para responder decisiones 
 | Decisión | Opciones | Recomendación | Responsable |
 |---|---|---|---|
 | Naturaleza del bono | Vale, deuda de la DAO, crédito mutuo, unidad interna | Derecho sobre la producción del circuito con garantía de la DAO | Hernán / Rodrigo |
+| Bono como obligación | ¿La obligación nace al emitir, comprar o vender? ¿La DAO hace matching? | Mantener en análisis; experimento E9 después de E1-E8 | Hernán / Rodrigo |
 | Qué pasa al vencer | Se extingue el derecho; el compromiso sigue | Mantener esa separación | Hernán / Rodrigo |
 | Reemisión | Una por corrida o por ciclo | Una por corrida en la primera simulación | Rodrigo |
 | Fórmula de emisión | Proporcional a la oferta, con mínimo y máximo | Definir fórmula exacta antes de la corrida | Rodrigo |
@@ -318,5 +333,6 @@ El simulador no está para “ver qué pasa”. Está para responder decisiones 
 - [[06 - Recursos y presupuesto|Recursos y presupuesto]]
 - [[07 - Checklist de ejecucion|Checklist de ejecución]]
 - [[08 - Evaluacion ADK|Evaluación ADK]]
+- [[09 - Ideas en analisis - Bono como obligacion negociable|Bono como obligación negociable]]
 - [[03 - Direccion y Estrategia/Modelo - Circuito de creditos|Modelo — Circuito de créditos]]
 - [[10 - Modelo Economico y Tokenomia/Mecanismo - Precios y valor hora|Mecanismo — Precios y valor hora]]

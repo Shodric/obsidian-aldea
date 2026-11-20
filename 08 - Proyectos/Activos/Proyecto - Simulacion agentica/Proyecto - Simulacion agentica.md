@@ -31,6 +31,7 @@ actualizado: 2026-11-20
 | [[06 - Recursos y presupuesto]] | Roles, herramientas, modelos y costos |
 | [[07 - Checklist de ejecucion]] | Paso a paso para correr la simulación y entregar el informe |
 | [[08 - Evaluacion ADK]] | Pros, contras y recomendación sobre Agent Development Kit |
+| [[09 - Ideas en analisis - Bono como obligacion negociable]] | Idea en análisis: obligación, DAO matching y E9 |
 
 ## Objetivo
 
