@@ -12,10 +12,10 @@ Estado de construcción del vault y del proyecto. Mover los ítems a medida que 
 ## 📋 To Do
 
 ### Vault
-- [ ] Cargar los archivos que envíe Hernán en `16 - Archivo/2026/`.
 - [ ] Completar fecha, hora y duración exactas de la llamada.
 - [ ] Agregar bibliografía y enlaces externos verificados.
 - [ ] Revisar y validar la estructura del vault con Hernán y Rodrigo.
+- [ ] Contrastar los documentos v6 de Hernán con el modelo del vault: emisión inicial proporcional a la oferta, compromiso mínimo, sanción por rechazo y gasto FIFO.
 
 ### Documentos y validación
 - [ ] Armar el paquete de validación para Hernán: mensaje, agenda, checklist de las 6 decisiones y preguntas concretas.
@@ -25,8 +25,7 @@ Estado de construcción del vault y del proyecto. Mover los ítems a medida que 
 - [ ] Revisión y normalización del vault: índices faltantes, enlaces internos y consistencia de frontmatter. Ver [[00 - Centro de Mando/Revision y normalizacion del vault|qué incluye]].
 
 ### Proyecto
-- [ ] Recibir el modelo original de moneda social (2016–2024) y los dos pitches de Aldea.
-- [ ] Revisar el simulador JSX y verificar que sea seguro ejecutarlo.
+- [ ] Revisar el simulador JSX y verificar que sea seguro ejecutarlo. *(aún no recibido)*
 - [ ] Definir el territorio del piloto y los contactos locales.
 - [ ] Definir el alcance funcional del MVP y sus no-alcances.
 - [ ] Diseñar el piloto de 4 semanas y su marco de evaluación.
@@ -71,6 +70,10 @@ Estado de construcción del vault y del proyecto. Mover los ítems a medida que 
 - [x] Carpeta de planificación de la simulación agéntica creada.
 - [x] Proyecto de prototipo navegable del MVP creado.
 - [x] Repositorio Git inicializado y primer commit.
+- [x] Documentos de Hernán recibidos: modelo original, dos versiones del pitch y dos versiones de la aproximación técnica.
+- [x] Copias de trabajo en Markdown y índice de lectura rápida en `16 - Archivo/2026/Extraidos/`.
+- [x] Kanban actualizado con los pendientes y los ítems pospuestos.
+- [x] Segundo commit con los documentos de Hernán y las copias de trabajo.
 
 ## Enlaces
 

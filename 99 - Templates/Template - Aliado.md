@@ -1,6 +1,6 @@
 ---
 tipo: aliado
-estado: identificado
+estado: pendiente
 area: alianzas
 organizacion: por confirmar
 contacto: por confirmar
