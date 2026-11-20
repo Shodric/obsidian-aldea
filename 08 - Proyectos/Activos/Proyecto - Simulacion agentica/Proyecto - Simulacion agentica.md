@@ -15,6 +15,9 @@ actualizado: 2026-11-20
 > [!info] Estado
 > **Pospuesto para otro momento.** La planificación y la arquitectura están cerradas; la ejecución todavía no empezó. El modelo, el lenguaje, los agentes y las repeticiones ya están definidos. Falta la API key, el roster definitivo y la fecha de la primera corrida.
 
+> [!info] Repositorio de desarrollo
+> La copia técnica para construir el simulador está en `/Users/shodric/Documents/GitHub/aldea-simulator` (Git, solo documentación por ahora). El vault sigue siendo la fuente de gestión y de decisiones.
+
 ## Qué contiene esta carpeta
 
 | Documento | Para qué sirve |

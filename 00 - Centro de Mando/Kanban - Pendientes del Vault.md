@@ -84,6 +84,7 @@ Estado de construcción del vault y del proyecto. Mover los ítems a medida que 
 - [x] Teléfono, grupo de la ciudad, sesiones de chat de 10 mensajes y Fiscalía documentados en la arquitectura y los requisitos.
 - [x] Evaluación de ADK documentada: no como núcleo; spike opcional.
 - [x] Cuarto commit con teléfono, chats, Fiscalía y evaluación de ADK.
+- [x] Repositorio `aldea-simulator` creado con documentación inicial, sin código.
 
 ## Enlaces
 
