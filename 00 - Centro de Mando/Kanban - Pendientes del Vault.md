@@ -1,0 +1,80 @@
+---
+tipo: dashboard
+area: direccion
+estado: activo
+actualizado: 2026-11-20
+---
+
+# Kanban — Pendientes del Vault
+
+Estado de construcción del vault y del proyecto. Mover los ítems a medida que se completan.
+
+## 📋 To Do
+
+### Vault
+- [ ] Cargar los archivos que envíe Hernán en `16 - Archivo/2026/`.
+- [ ] Completar fecha, hora y duración exactas de la llamada.
+- [ ] Agregar bibliografía y enlaces externos verificados.
+- [ ] Revisar y validar la estructura del vault con Hernán y Rodrigo.
+
+### Documentos y validación
+- [ ] Armar el paquete de validación para Hernán: mensaje, agenda, checklist de las 6 decisiones y preguntas concretas.
+- [ ] Convertir el Documento Ejecutivo en pitch deck de 12 slides, one-pager y guion de presentación.
+- [ ] Armar el modelo financiero y presupuesto de Fase 0, Fase 1 y piloto.
+- [ ] Preparar un brief legal de 2–3 páginas para la abogada.
+- [ ] Revisión y normalización del vault: índices faltantes, enlaces internos y consistencia de frontmatter. Ver [[00 - Centro de Mando/Revision y normalizacion del vault|qué incluye]].
+
+### Proyecto
+- [ ] Recibir el modelo original de moneda social (2016–2024) y los dos pitches de Aldea.
+- [ ] Revisar el simulador JSX y verificar que sea seguro ejecutarlo.
+- [ ] Definir el territorio del piloto y los contactos locales.
+- [ ] Definir el alcance funcional del MVP y sus no-alcances.
+- [ ] Diseñar el piloto de 4 semanas y su marco de evaluación.
+- [ ] Validar el documento ejecutivo y las 6 decisiones con Hernán.
+
+## 🔄 In Progress
+
+- [ ] Documento Ejecutivo v0.1. *(borrador listo; falta revisión y validación con Hernán)*
+- [ ] Paquete de validación para Hernán. *(por armar)*
+
+## ⏸️ Pospuesto
+
+- [ ] Ejecutar la simulación agéntica. *(carpeta de planificación lista en `08 - Proyectos/Activos/Proyecto - Simulacion agentica/`; se corre en otro momento)*
+- [ ] Simulación económica con gráficos de circulación, vencimiento y free riders. *(posterior a la simulación agéntica)*
+- [ ] Prototipo navegable del MVP. *(proyecto creado en `08 - Proyectos/Activos/Proyecto - Prototipo navegable MVP.md`; no iniciar hasta validar alcance)*
+- [ ] Token de recompensa. *(Fase 3; no bloquea el MVP)*
+
+## 🚫 Bloqueado
+
+| Ítem | Bloqueado por | Quién lo resuelve |
+|---|---|---|
+| Encuadre legal del crédito | Falta abogada con disponibilidad y dictamen | Rodrigo / abogada |
+| Territorio del piloto | Falta decisión entre conurbano y Azul; faltan contactos locales | Hernán / Rodrigo |
+| Presupuesto de Fase 1 | Falta definir alcance y equipo | Dirección |
+
+## ✅ Listo
+
+- [x] Estructura del vault adaptada de MUTSEPU y Munay.
+- [x] Transcripción editada de la llamada con Hernán.
+- [x] Apuntes, tareas y preguntas abiertas de la llamada.
+- [x] Documento ejecutivo base.
+- [x] Modelo del circuito de créditos.
+- [x] Roadmap de cuatro fases.
+- [x] Registro de riesgos inicial.
+- [x] Plantillas de notas.
+- [x] Dashboard y Centro de Mando.
+- [x] Mapa de aliados y pipeline de contactos.
+- [x] Presupuesto inicial y fuentes de financiamiento.
+- [x] Marco de evaluación del piloto y KPIs.
+- [x] Dataview y Tasks instalados y habilitados en Obsidian.
+- [x] Plugin core Templates apuntando a `99 - Templates`.
+- [x] Carpeta de planificación de la simulación agéntica creada.
+- [x] Proyecto de prototipo navegable del MVP creado.
+- [x] Repositorio Git inicializado y primer commit.
+
+## Enlaces
+
+- [[00 - Centro de Mando/Aldea - Centro de Mando|Centro de Mando]]
+- [[00 - Centro de Mando/Como usar esta estructura|Cómo usar esta estructura]]
+- [[08 - Proyectos/Indice - Proyectos|Proyectos]]
+- [[08 - Proyectos/Activos/Proyecto - Simulacion agentica/Proyecto - Simulacion agentica|Proyecto — Simulación agéntica]]

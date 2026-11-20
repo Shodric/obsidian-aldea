@@ -1,0 +1,143 @@
+---
+tipo: proyecto
+estado: pendiente
+fase: 0
+area: proyectos
+responsable: Rodrigo
+inicio: 2026-11-20
+fecha_objetivo: por confirmar
+presupuesto_estimado: "USD 0-30"
+actualizado: 2026-11-20
+---
+
+# Proyecto — Simulación agéntica
+
+> [!info] Estado
+> **Pospuesto para otro momento.** La planificación está completa y vive en esta carpeta; la ejecución todavía no empezó. No se necesita presupuesto hasta definir el modelo, la fecha y el alcance de la primera corrida.
+
+## Qué contiene esta carpeta
+
+| Documento | Para qué sirve |
+|---|---|
+| [[01 - Plan de ejecucion]] | Fases, actividades, entregables y puertas de decisión |
+| [[02 - Requisitos]] | Qué tiene que tener el simulador para considerarse listo |
+| [[03 - Diseno experimental]] | Hipótesis, escenarios E1-E8, métricas y análisis |
+| [[04 - Arquitectura tecnica]] | Componentes, modelo de datos, bucle y stack |
+| [[05 - Prompts y perfiles]] | Personalidades, prompts, formato de acciones y guardrails |
+| [[06 - Recursos y presupuesto]] | Roles, herramientas, modelos y costos |
+| [[07 - Checklist de ejecucion]] | Paso a paso para correr la simulación y entregar el informe |
+
+## Objetivo
+
+Probar el circuito de Aldea con agentes de IA que tengan personalidad, memoria y capacidad de diálogo, antes de construir el MVP. El objetivo no es predecir el futuro, sino **encontrar los puntos de bloqueo, los atajos y las condiciones de sostenibilidad** del modelo.
+
+## Preguntas que debe responder
+
+1. ¿El circuito arranca y se sostiene con 10–30 agentes?
+2. ¿Qué proporción de créditos queda sin usar o vence?
+3. ¿Los especuladores acaparan o estabilizan el mercado?
+4. ¿Qué pasa cuando sube el porcentaje de escépticos?
+5. ¿El vencimiento de 15, 30 o 60 días cambia la circulación?
+6. ¿El precio fijo evita el regateo o lo desplaza a otro canal?
+7. ¿Qué sanciones sostienen la confianza sin expulsar a la gente?
+8. ¿Qué atajos inventan los agentes para romper el sistema?
+
+## Alcance
+
+- Diseñar 4 perfiles de agente: optimista, neutro, especulativo y escéptico.
+- Modelar 10–30 agentes con oferta, demanda, créditos y vencimiento.
+- Incluir diálogo, memoria y capacidad de cambiar de opinión.
+- Medir intercambios, circulación, vencimientos, concentración y conflictos.
+- Producir un informe con recomendaciones de parámetros.
+
+## Fuera de alcance
+
+- Construir la app real.
+- Usar dinero real.
+- Simular el territorio completo.
+- Predecir la adopción con precisión.
+- Token de recompensa.
+- Validar legalmente el modelo.
+
+## Fases
+
+| Fase | Nombre | Entregable | Estado |
+|---|---|---|---|
+| F0.1 | Preparación | Insumos, preguntas y presupuesto aprobados | Pendiente |
+| F0.2 | Diseño | Perfiles, escenarios, métricas y prompts cerrados | Pendiente |
+| F0.3 | Construcción | Arnés reproducible con modo deterministico y modo LLM | Pendiente |
+| F0.4 | Prueba | Corrida con 1, 3 y 10 agentes; ajustes | Pendiente |
+| F0.5 | Corrida | E1-E8 ejecutados y datos crudos guardados | Pendiente |
+| F0.6 | Análisis | Informe, gráficos y recomendaciones | Pendiente |
+
+El detalle de cada fase está en [[01 - Plan de ejecucion|Plan de ejecución]].
+
+## Hitos
+
+| Hito | Fecha objetivo | Estado |
+|---|---|---|
+| Insumos de Hernán recibidos | Por confirmar | Pendiente |
+| Perfiles y métricas definidos | Por confirmar | Pendiente |
+| Arnés de simulación funcionando | Por confirmar | Pendiente |
+| Primera corrida con 10 agentes | Por confirmar | Pendiente |
+| Corrida con 30 agentes | Por confirmar | Pendiente |
+| Informe de resultados | Por confirmar | Pendiente |
+
+## Requisitos mínimos para ejecutar
+
+Antes de escribir la primera línea del simulador tienen que estar definidos:
+
+- [ ] Las preguntas y las hipótesis prioritarias.
+- [ ] Los 4 perfiles de agente y sus reglas de decisión.
+- [ ] Los escenarios E1-E8 y sus variables.
+- [ ] Las métricas y la forma de calcularlas.
+- [ ] El modelo de lenguaje, el presupuesto y el límite de llamadas.
+- [ ] El formato de datos y el mecanismo de reproducibilidad.
+- [ ] El criterio de éxito y el formato del informe.
+
+El detalle está en [[02 - Requisitos|Requisitos]] y [[07 - Checklist de ejecucion|Checklist de ejecución]].
+
+## Dependencias
+
+- Archivos de Hernán: simulador JSX, pitches y modelo original 2016–2024.
+- Definición de parámetros del circuito: vencimiento, precios, techos y sanciones.
+- Presupuesto de modelos: USD 0–30 para la primera etapa.
+- Una persona con tiempo para construir y analizar el arnés.
+- Un lugar donde guardar datos crudos y resultados.
+
+## Riesgos
+
+- **Abstracción excesiva**: los agentes no representan el comportamiento real.
+- **Sesgo de cooperación**: los LLM tienden a colaborar y a olvidar el conflicto.
+- **Costo**: las llamadas a modelos superan el presupuesto.
+- **Complejidad**: el arnés se vuelve más costoso que el MVP.
+- **Sobreinterpretación**: los resultados se leen como profecías.
+- **Datos inventados**: los agentes producen información que parece real.
+
+Mitigaciones en [[06 - Recursos y presupuesto|Recursos y presupuesto]] y [[03 - Diseno experimental|Diseño experimental]].
+
+## Criterio de éxito
+
+- Se identifican al menos 3 puntos de bloqueo del circuito.
+- Se comparan al menos 3 escenarios de participación.
+- Se producen recomendaciones concretas de parámetros.
+- El costo total no supera los USD 30.
+- Los datos crudos y el código permiten repetir la corrida.
+
+## Decisiones pendientes antes de correr
+
+| Decisión | Opciones | Responsable | Estado |
+|---|---|---|---|
+| Modelo de lenguaje | Gratuito, DeepSeek, premium | Rodrigo | Pendiente |
+| Presupuesto máximo | USD 0, USD 10–30, USD 30–100 | Rodrigo / Hernán | Pendiente |
+| Modo de simulación | Deterministico, LLM, híbrido | Rodrigo | Pendiente |
+| Cantidad de repeticiones | 1, 3, 5 por escenario | Rodrigo | Pendiente |
+| Horizonte | 28 días, 56 días | Rodrigo | Pendiente |
+| Formato del informe | Markdown, PDF, slides | Rodrigo / Hernán | Pendiente |
+
+## Enlaces
+
+- [[07 - Tecnologia y Producto/Simulacion - Agentes IA|Simulación — Agentes IA]]
+- [[10 - Modelo Economico y Tokenomia/Simulacion - Parametros y resultados|Simulación — Parámetros y resultados]]
+- [[03 - Direccion y Estrategia/Modelo - Circuito de creditos|Modelo — Circuito de créditos]]
+- [[08 - Proyectos/Indice - Proyectos|Índice de proyectos]]
