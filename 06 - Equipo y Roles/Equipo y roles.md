@@ -2,7 +2,7 @@
 tipo: documento
 estado: borrador
 area: equipo
-actualizado: 2026-11-20
+actualizado: 2026-11-26
 ---
 
 # Equipo y roles
@@ -16,6 +16,7 @@ actualizado: 2026-11-20
 |---|---|---|---|---|
 | **Hernán** | Impulsor, territorio y visión | Parcial | Conocimiento del territorio, economía social, contactos, experiencia | Trabajo municipal, tiempo limitado |
 | **Rodrigo** | Tecnología, datos y estrategia | Parcial | Análisis, simulación, desarrollo, documentación | Sin presencia territorial |
+| **Rocío Romero Villalba** | Participante — modelo de token (sistema mutuo y puntos) | Por confirmar | Por confirmar | Por confirmar |
 | **Abogada (por confirmar)** | Legal | A demanda | Encuadre, contratos, datos | Agenda |
 | **Colaboradores** | Diseño, comunicación, operación | A definir | Por confirmar | Por confirmar |
 
