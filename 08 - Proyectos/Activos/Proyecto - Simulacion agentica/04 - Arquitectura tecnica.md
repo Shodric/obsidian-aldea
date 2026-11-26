@@ -3,7 +3,7 @@ tipo: documento
 estado: borrador
 area: tecnologia
 proyecto: "[[Proyecto - Simulacion agentica]]"
-actualizado: 2026-11-20
+actualizado: 2026-11-25
 ---
 
 # Arquitectura técnica — Simulación agéntica
@@ -716,23 +716,23 @@ emisión inicial o venta
    lote activo
    ├─ se gasta (FIFO)
    ├─ se transfiere → lote nuevo para el receptor
-   ├─ se parte → lotes hijos con el mismo vencimiento
+   ├─ se parte → el remanente conserva su vencimiento
    └─ vence en posesión → sale de circulación
 ```
 
-- **Emisión inicial:** gratuita, proporcional a la oferta declarada y dentro de un mínimo y un máximo. Crea un lote con vencimiento propio.
+- **Emisión.** Cada oferta puede emitir hasta su precio por stock, limitado por el cupo acumulado del agente. El mock de aceptación usa 600 créditos por agente como techo por corrida. Si se agota, las ofertas siguientes siguen disponibles para el intercambio.
 - **Venta:** el comprador paga con sus lotes; el motor consume primero los que vencen antes (FIFO). El vendedor recibe un lote nuevo con un plazo completo desde la recepción.
 - **Transferencia:** cada transferencia crea un lote nuevo para el receptor; el reloj se reinicia para ese lote.
 - **Vencimiento:** vence el lote que queda quieto, no todo el saldo del agente. La app muestra el saldo desglosado por vencimiento.
-- **Partición:** un lote se puede dividir; los hijos heredan el vencimiento del padre.
-- **Compromiso mínimo:** el saldo inicial se fija como compromiso de venta. El agente debe aceptar compras sobre su oferta hasta cubrirlo. No se sanciona la falta de demanda; sí el rechazo explícito o el silencio confirmado.
-- **Escrow:** en entregas diferidas, el pago queda retenido hasta `confirm_delivery`. Si no se confirma, se abre disputa y se aplica la sanción.
+- **Partición.** El remanente conserva el vencimiento anterior. Un lote nuevo queda enlazado con su padre. La retención en escrow conserva el vencimiento original para eventuales devoluciones.
+- **Compromiso.** Cada oferta registra como compromiso el monto que respaldó. Las entregas confirmadas lo reducen por su valor y el vencimiento de los créditos deja vigente el compromiso. El rechazo explícito o tres días sin respuesta a una solicitud financiada pueden suspender al vendedor mientras conserve compromiso pendiente. El mock usa suspensiones de 1, 7 o 28 días según el escenario.
+- **Escrow.** `buy` retiene pago y stock. El vendedor acepta y el comprador confirma la entrega. La confirmación libera el pago con un plazo completo. El rechazo o la falta de respuesta devuelven pago y stock. Una venta aceptada que sigue sin confirmación al sexto día también se devuelve y queda registrada sin atribuirle incumplimiento al vendedor. La devolución conserva el vencimiento original y se registra como vencida si el plazo ya pasó.
 
 **Invariantes**
 
 - La suma de lotes activos de un agente nunca es negativa.
 - Un lote vencido no se puede transferir.
-- La suma de créditos emitidos es igual a la suma de activos, gastados y vencidos.
+- Los créditos emitidos son iguales a la suma de créditos vigentes, retenidos y vencidos.
 - Cada lote tiene un único padre, salvo la emisión inicial.
 - La suma de los hijos de una partición es igual al padre.
 - Ninguna acción puede crear créditos sin una emisión o una venta válida.

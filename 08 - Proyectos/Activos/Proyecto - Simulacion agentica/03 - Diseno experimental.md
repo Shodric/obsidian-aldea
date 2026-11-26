@@ -3,7 +3,7 @@ tipo: documento
 estado: borrador
 area: tecnologia
 proyecto: "[[Proyecto - Simulacion agentica]]"
-actualizado: 2026-11-20
+actualizado: 2026-11-25
 ---
 
 # Diseño experimental — Simulación agéntica
@@ -36,18 +36,18 @@ actualizado: 2026-11-20
 
 ## 3. Escenarios
 
-| ID | Agentes | Perfiles (opt/neut/espec/escép) | Vencimiento | Precio | Sanción | Propósito |
+| ID | Agentes | Agentes por perfil (opt/neut/espec/escép) | Vencimiento | Precio | Sanción | Propósito |
 |---|---|---|---|---|---|---|
-| E1 | 10 | 30/40/15/15 | 30 días | Fijo | Media | Línea base |
-| E2 | 10 | 30/20/15/35 | 30 días | Fijo | Media | Estrés por escepticismo |
-| E3 | 10 | 30/25/30/15 | 30 días | Fijo | Media | Estrés por especulación |
-| E4 | 10 | 30/40/15/15 | 15 días | Fijo | Media | Vencimiento corto |
-| E5 | 10 | 30/40/15/15 | 60 días | Fijo | Media | Vencimiento largo |
-| E6 | 10 | 30/40/15/15 | 30 días | Negociado | Media | Regateo |
-| E7 | 10 | 30/40/15/15 | 30 días | Fijo | Fuerte | Sanción fuerte |
-| E8 | 10 | 30/40/15/15 | 30 días | Fijo | Débil | Sanción débil |
+| E1 | 10 | 3/4/2/1 | 30 días | Fijo | Media | Línea base |
+| E2 | 10 | 3/2/2/3 | 30 días | Fijo | Media | Estrés por escepticismo |
+| E3 | 10 | 3/3/3/1 | 30 días | Fijo | Media | Estrés por especulación |
+| E4 | 10 | 3/4/2/1 | 15 días | Fijo | Media | Vencimiento corto |
+| E5 | 10 | 3/4/2/1 | 60 días | Fijo | Media | Vencimiento largo |
+| E6 | 10 | 3/4/2/1 | 30 días | Negociado | Media | Regateo |
+| E7 | 10 | 3/4/2/1 | 30 días | Fijo | Fuerte | Sanción fuerte |
+| E8 | 10 | 3/4/2/1 | 30 días | Fijo | Débil | Sanción débil |
 
-**Control:** E1 es la referencia. Cada escenario cambia una variable principal respecto de E1. La escala a 30 agentes queda para una fase posterior, fuera de esta corrida.
+**Control:** E1 es la referencia. Cada escenario cambia una variable principal respecto de E1. Las cantidades son enteras. En E2, dos neutros pasan a escépticos. En E3, un neutro pasa a especulativo. Se conservan los ciudadanos, oficios y recursos. La escala a 30 agentes queda para una fase posterior.
 
 ### 3.1 E9 propuesto — matching de la DAO
 
@@ -85,11 +85,11 @@ Comparación: E9 contra E1. La DAO envía ofertas de trabajo/productos a los age
 | Créditos emitidos | Suma de créditos creados | créditos |
 | Créditos usados | Suma de créditos transferidos en compras | créditos |
 | Créditos vencidos | Suma de créditos que expiraron en posesión | créditos |
-| Tasa de uso | Créditos usados / créditos emitidos | % |
+| Circulación acumulada | Créditos transferidos en entregas confirmadas / créditos emitidos. La misma unidad puede circular varias veces. | veces |
 | Tasa de vencimiento | Créditos vencidos / créditos emitidos | % |
 | Tiempo promedio de circulación | Días entre emisión y última transferencia | días |
 | Concentración | Gini de saldos al cierre | 0–1 |
-| Tasa de incumplimiento | Ofertas no entregadas / ofertas comprometidas | % |
+| Tasa de incumplimiento | Solicitudes con rechazo del vendedor o sin respuesta / (entregas confirmadas + solicitudes incumplidas). Informar aparte solicitudes pendientes y aceptadas sin confirmación. | % |
 | Categorías activas | Categorías con al menos una oferta | # |
 | Conflictos | Disputas registradas | # |
 | Sanciones | Sanciones aplicadas por tipo | # |
@@ -106,10 +106,10 @@ Comparación: E9 contra E1. La DAO envía ofertas de trabajo/productos a los age
 
 ## 6. Diseño de la corrida
 
-- **Horizonte:** 28 días por ciclo; 56 días para observar un segundo ciclo.
+- **Horizonte.** El E1 de aceptación dura 28 días. La comparación E1–E8 usa 90 días para que los lotes iniciales de 15, 30 y 60 días tengan tiempo de vencer. Los saldos vigentes y retenidos al cierre se registran por separado.
 - **Turnos:** 1 turno = 1 día. Cada agente actúa una vez por turno, con hasta 5 tool calls, 20 puntos de movimiento y 2 puntos de conversación (1 en la primera corrida).
 - **Repeticiones:** 5 por escenario, con semillas fijas y registradas.
-- **Semillas:** no se cambian entre repeticiones del mismo escenario; se usan para medir variabilidad.
+- **Semillas.** Usar cinco semillas distintas, registradas y en el mismo orden para todos los escenarios. La primera batería usa 42, 43, 44, 45 y 46. Comparar primero por pares de igual semilla.
 - **Modelo:** primero mock deterministico; luego LLM con temperatura 0,5 para reducir varianza.
 - **Datos:** se guardan eventos, transacciones, mensajes, configuración y resultados.
 - **Costo:** se estima antes de cada corrida y se corta si supera el límite. 10 agentes × 28 días × 5 repeticiones = 1.400 turnos; hasta 7.000 tool calls si se usan 5 por turno.

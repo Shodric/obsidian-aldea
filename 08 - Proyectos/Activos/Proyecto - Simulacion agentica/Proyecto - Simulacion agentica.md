@@ -18,6 +18,12 @@ actualizado: 2026-11-20
 > [!info] Repositorio de desarrollo
 > La copia técnica para construir el simulador está en `/Users/shodric/Documents/GitHub/aldea-simulator` (Git, solo documentación por ahora). El vault sigue siendo la fuente de gestión y de decisiones.
 
+## Verificación técnica del 25 de noviembre de 2026
+
+E1 de aceptación y E1–E8 se ejecutaron en modo mock, con cinco semillas compartidas. E1 registró 252 entregas confirmadas en 28 días. En el ensayo de 90 días, 30 días de vencimiento dieron 551 entregas, frente a 392 con 15 días y 623 con 60 días. La conciliación de las 45 repeticiones se verificó con SQLite.
+
+El resultado documenta las mecánicas bajo la conducta programada. Quedan pendientes calibrar los parámetros, validar un piloto LLM y completar los casos de Fiscalía. Los resultados y comandos están en `docs/09-parametros-y-resultados.md` del repositorio `aldea-simulator`.
+
 ## Qué contiene esta carpeta
 
 | Documento | Para qué sirve |

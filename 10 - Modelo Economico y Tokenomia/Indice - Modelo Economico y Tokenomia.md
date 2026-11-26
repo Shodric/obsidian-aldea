@@ -14,6 +14,10 @@ actualizado: 2026-11-20
 - [[10 - Modelo Economico y Tokenomia/Token de recompensa - Evaluacion|Token de recompensa — Evaluación]]
 - [[10 - Modelo Economico y Tokenomia/Simulacion - Parametros y resultados|Simulación — Parámetros y resultados]]
 
+## Subcarpetas
+
+- [[10 - Modelo Economico y Tokenomia/Alternativas de bono/Indice - Alternativas de bono|Alternativas de bono]] — análisis de las once variantes discutidas con Hernán y propuestas nuevas.
+
 ## Notas de esta carpeta
 
 ```dataview
